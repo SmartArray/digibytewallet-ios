@@ -13,6 +13,9 @@ fileprivate class LogoCell: UITableViewCell {
     private let digiassetsLogo = UIImageView(image: UIImage(named: "digiassets_logo"))
     
     let stackView = UIStackView()
+    let icon = UIView()
+    let iconInner = UIView()
+    let iconIV = UIImageView()
     let headerLabel = UILabel(font: UIFont.da.customBold(size: 20), color: .white)
     let dateLabel = UILabel(font: UIFont.da.customMedium(size: 14), color: .white)
     
@@ -24,6 +27,7 @@ fileprivate class LogoCell: UITableViewCell {
         stackView.distribution = .fill
         stackView.spacing = 8
         
+        stackView.addArrangedSubview(icon)
         stackView.addArrangedSubview(headerLabel)
         stackView.addArrangedSubview(dateLabel)
         
@@ -48,8 +52,30 @@ fileprivate class LogoCell: UITableViewCell {
         backgroundColor = UIColor.clear
         selectionStyle = .none
         
-        headerLabel.text = "Asset Transaction"
+        headerLabel.text = S.Assets.tx
         headerLabel.textAlignment = .center
+    
+        let padding: CGFloat = 15
+        let iconSize: CGFloat = 20
+        
+        icon.addSubview(iconInner)
+        iconInner.addSubview(iconIV)
+        
+        iconIV.contentMode = .scaleAspectFit
+        iconIV.tintColor = UIColor.white
+        iconIV.constraint(padding: padding)
+        iconIV.constrain([
+            iconIV.widthAnchor.constraint(equalToConstant: iconSize),
+            iconIV.heightAnchor.constraint(equalToConstant: iconSize),
+        ])
+        
+        iconInner.constrain([
+            iconInner.topAnchor.constraint(equalTo: icon.topAnchor, constant: 5),
+            iconInner.bottomAnchor.constraint(equalTo: icon.bottomAnchor, constant: -5),
+            iconInner.centerXAnchor.constraint(equalTo: icon.centerXAnchor)
+        ])
+        
+        iconInner.layer.cornerRadius = (iconSize + 2 * padding) / 2
         
         dateLabel.textAlignment = .center
     }
@@ -67,6 +93,7 @@ class AssetDrawer: UIView {
     private var tx: Transaction?
 
     private let tableView: UITableView = UITableView()
+    private let refreshControl = UIRefreshControl()
     private var contextMenuConstraints = [NSLayoutConstraint]()
     
     private let contextMenu = AssetContextMenu()
@@ -78,9 +105,14 @@ class AssetDrawer: UIView {
     private var walletsAssetModels = [AssetHeaderModel]()
     
     var walletManager: WalletManager? = nil
+    
+    // Callback to show the raw tx
     var callback: ((Transaction) -> Void)? = nil
+    
+    // Callback to show the asset transaction details (opens up DigiAssets submenu)
     var assetNavigatorCallback: ((AssetMenuAction) -> Void)? = nil /* AssetId, Transaction */
-    let viewRawTxButton = DAButton(title: "View Raw Transaction".uppercased(), backgroundColor: UIColor.da.darkSkyBlue)
+    
+    let viewRawTxButton = DAButton(title: S.Assets.rawTx.uppercased(), backgroundColor: UIColor.da.darkSkyBlue)
     
     init(id: String) {
         self.id = id
@@ -113,6 +145,8 @@ class AssetDrawer: UIView {
             viewRawTxButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
             viewRawTxButton.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
+        
+        tableView.refreshControl = refreshControl
     }
     
     private func setStyle() {
@@ -122,6 +156,8 @@ class AssetDrawer: UIView {
         
         viewRawTxButton.label.font = UIFont.da.customBold(size: 12)
         viewRawTxButton.height = 34
+        
+        refreshControl.tintColor = UIColor.whiteTint
     }
     
     private func configureTableView() {
@@ -175,6 +211,32 @@ class AssetDrawer: UIView {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 guard let assetId = self?.contextMenuCtx else { return }
                 self?.assetNavigatorCallback?(.burn(assetId))
+            }
+        }
+        
+        refreshControl.addTarget(self, action: #selector(refreshTransactionModel), for: .valueChanged)
+    }
+    
+    @objc
+    private func refreshTransactionModel() {
+        guard let tx = tx else {
+            refreshControl.endRefreshing()
+            return
+        }
+        
+        let _ = AssetResolver.init(txids: [tx.hash]) { (states) in
+            DispatchQueue.main.async {
+                guard
+                    states.count > 0,
+                    !states[0].failed,
+                    let infoModel = states[0].transactionInfoModel
+                else {
+                    self.refreshControl.endRefreshing()
+                    return
+                }
+                
+                self.setTransactionInfoModel(for: tx, infoModel: infoModel)
+                self.refreshControl.endRefreshing()
             }
         }
     }
@@ -242,11 +304,29 @@ extension AssetDrawer: UITableViewDelegate, UITableViewDataSource {
         
         // Check if asset utxo is part of wallet
         infoModel.vout.forEach { (utxo) in
-            // Received transactions should be
-            if walletManager?.wallet?.hasUtxo(txid: txid, n: utxo.n) == received {
+            if tx.direction == .moved {
+                // Moved DGB-TX: most likely burned assets.
+                // Show those, that were not sent to internal wallet
+                assetUtxos.append(utxo)
+                walletsAssetModels.append(contentsOf: utxo.assets)
+                
+            }
+            
+            guard (utxo.scriptPubKey.addresses?.count ?? 0) > 0 else { return }
+            let addresses = utxo.scriptPubKey.addresses!
+            
+            // Only show appropriate direction
+            if walletManager?.wallet?.containsAddress(addresses[0]) == received {
                 assetUtxos.append(utxo)
                 walletsAssetModels.append(contentsOf: utxo.assets)
             }
+        }
+        
+        // Workaround: In case of some BURN-ALL transactions, no models were specified in the outputs.
+        // Check if there is one in the inputs
+        if walletsAssetModels.count == 0 {
+            // Retry with models that were specified in vin
+            infoModel.vin.forEach { walletsAssetModels.append(contentsOf: $0.assets) }
         }
         
         // Index the full models of the wallet's assets
@@ -261,8 +341,25 @@ extension AssetDrawer: UITableViewDelegate, UITableViewDataSource {
         case 0:
             let tx = self.tx!
             let cell = tableView.dequeueReusableCell(withIdentifier: "logo", for: indexPath) as! LogoCell
-            
-            cell.dateLabel.text = tx.direction == .received ? "Received on: \(tx.timeTimestamp)" : "Sent on: \(tx.timeTimestamp)"
+    
+            switch (tx.assetType) {
+            case .received:
+                cell.dateLabel.text = "Received on: \(tx.longTimestamp)"
+                cell.iconIV.image = UIImage(named: "da-receive")?.withRenderingMode(.alwaysTemplate)
+                cell.iconInner.backgroundColor = UIColor.da.greenApple
+            case .sent:
+                cell.dateLabel.text = "Sent on: \(tx.longTimestamp)"
+                cell.iconIV.image = UIImage(named: "da-send")?.withRenderingMode(.alwaysTemplate)
+                cell.iconInner.backgroundColor = UIColor.da.darkSkyBlue
+            case .burned:
+                cell.dateLabel.text = "Burned on: \(tx.longTimestamp)"
+                cell.iconIV.image = UIImage(named: "da-burn")?.withRenderingMode(.alwaysTemplate)
+                cell.iconInner.backgroundColor = UIColor.da.burnColor
+            case .none:
+                cell.dateLabel.text = "Processed on: \(tx.longTimestamp)"
+                cell.iconIV.image = UIImage(named: "da-unknown")?.withRenderingMode(.alwaysTemplate)
+                cell.iconInner.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+            }
             
             return cell
             
@@ -277,6 +374,15 @@ extension AssetDrawer: UITableViewDelegate, UITableViewDataSource {
             let assetId = assetInfo.assetId
             let amount = assetInfo.amount
             let assetModel = assetModels[assetId]!
+            
+            let amount: Int = {
+                if tx.direction == .moved {
+                    // ToDo: Use correct asset input id
+                    return infoModel?.getBurnAmount(input: 0) ?? 0
+                } else {
+                    return assetInfo.amount
+                }
+            }()
             
             cell.imageTappedCallback = { cell in
                 guard

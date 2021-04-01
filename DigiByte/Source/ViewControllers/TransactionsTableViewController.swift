@@ -284,8 +284,14 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let tx = transactions[indexPath.row]
         
+        if !UserDefaults.showRawTransactionsOnly, tx.isAssetTx {
         if tx.isAssetTx {
-            didSelectAssetTx(tx)
+            if tx.confirms < 1 {
+                didSelectTransaction(transactions, indexPath.row)
+                UIApplication.shared.keyWindow?.rootViewController?.showAlert(with: "Asset Transaction not yet confirmed", color: UIColor.da.orange)
+            } else {
+                didSelectAssetTx(tx)
+            }
         } else {
             didSelectTransaction(transactions, indexPath.row)
         }

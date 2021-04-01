@@ -14,6 +14,8 @@ private let lastBlockHeightKey = "LastBlockHeightKey"
 private let progressUpdateInterval: TimeInterval = 0.5
 private let updateDebounceInterval: TimeInterval = 0.4
 
+let startHeight: UInt32 = 6200000 // 6.2 Million
+
 class WalletCoordinator : Subscriber, Trackable {
 
     var kvStore: BRReplicatedKVStore? {
@@ -53,15 +55,19 @@ class WalletCoordinator : Subscriber, Trackable {
 
     @objc private func updateProgress() {
         DispatchQueue.walletQueue.async {
-            // Workaround: If lastBlockHeight is in future, we gonna override the saved lastBlockHeight
+            var fromStartHeight: UInt32 = startHeight
+            
             if let lastBlockHeight = self.walletManager.peerManager?.lastBlockHeight {
+                // Workaround: If lastBlockHeight is in future, we gonna override the saved lastBlockHeight
                 if self.lastBlockHeight > lastBlockHeight {
                     self.lastBlockHeight = lastBlockHeight
                 }
+                
+                fromStartHeight = min(lastBlockHeight, startHeight)
             }
             
             guard
-                let progress = self.walletManager.peerManager?.syncProgress(fromStartHeight: self.lastBlockHeight),
+                let progress = self.walletManager.peerManager?.syncProgress(fromStartHeight: fromStartHeight),
                 let timestamp = self.walletManager.peerManager?.lastBlockTimestamp,
                 let blockHeight = self.walletManager.peerManager?.lastBlockHeight else {
                     return
@@ -274,9 +280,12 @@ class WalletCoordinator : Subscriber, Trackable {
     }
 
     private func addSubscriptions() {
-        store.subscribe(self, name: .retrySync, callback: { _ in 
-            DispatchQueue.walletQueue.async {
+        store.subscribe(self, name: .retrySync, callback: { _ in
+            DispatchQueue.main.async {
                 self.store.perform(action: WalletChange.setSyncingState(.connecting))
+            }
+            
+            DispatchQueue.walletQueue.async {
                 self.walletManager.peerManager?.connect()
             }
         })

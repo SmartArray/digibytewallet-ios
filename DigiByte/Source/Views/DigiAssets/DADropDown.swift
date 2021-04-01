@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import Kingfisher
 
 class DADropDown: UIView {
     let imageView = UIImageView()
     let titleLabel = UILabel(font: UIFont.da.customBold(size: 14), color: .white)
     let downImg = UIImageView(image: UIImage(named: "da_sort_down")?.withRenderingMode(.alwaysTemplate))
+    
+    static let imageSize: CGFloat = 22.0
     
     init() {
         super.init(frame: .zero)
@@ -28,7 +31,7 @@ class DADropDown: UIView {
         imageView.alpha = 0.7
         
         titleLabel.textColor = .gray
-        titleLabel.text = "Select asset ..."
+        titleLabel.text = S.Assets.select
     }
     
     func setContent(asset: AssetModel?) {
@@ -40,7 +43,11 @@ class DADropDown: UIView {
         titleLabel.text = asset.getAssetName()
         
         if let urlStr = asset.getImage()?.url, let url = URL(string: urlStr) {
-            imageView.kf.setImage(with: url)
+            imageView.kf.setImage(with: url, placeholder: nil, options: [
+                .processor(DownsamplingImageProcessor(size: CGSize(width: DADropDown.imageSize, height: DADropDown.imageSize) )),
+                .scaleFactor(UIScreen.main.scale),
+                .cacheOriginalImage
+            ])
         } else {
             imageView.image = UIImage(named: "digiassets_small")
         }
@@ -58,8 +65,8 @@ class DADropDown: UIView {
         imageView.constrain([
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 0),
-            imageView.widthAnchor.constraint(equalToConstant: 22),
-            imageView.heightAnchor.constraint(equalToConstant: 22),
+            imageView.widthAnchor.constraint(equalToConstant: DADropDown.imageSize),
+            imageView.heightAnchor.constraint(equalToConstant: DADropDown.imageSize),
         ])
         
         titleLabel.constrain([

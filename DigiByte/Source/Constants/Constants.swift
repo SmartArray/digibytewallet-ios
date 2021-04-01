@@ -34,6 +34,7 @@ struct C {
     
     struct Colors {
         static let background = UIColor(red: 0x19/255, green: 0x1a / 255, blue: 0x2a / 255, alpha: 1.0) // #191a2a
+        static let cellBackground = UIColor(red: 0x2f/255, green: 0x31 / 255, blue: 0x45 / 255, alpha: 1.0) // #1E2034
         static let text = UIColor.white
         static let lightText = UIColor(red: 109, green: 109, blue: 126, alpha: 1.0)
         static let cardBackground = UIColor(red: 0x2E / 255, green: 0x2E / 255, blue: 0x47 / 255, alpha: 1.0)
@@ -62,10 +63,10 @@ struct C {
     static let feedbackEmail = "info@digibyte.io"
 	static let reviewLink = "https://itunes.apple.com/us/app/digibyte-wallet/id1328006562?action=write-review"
     static var standardPort: UInt16 {
-		return E.isTestnet ? 12024 : 12024
+		return E.isTestnet ? 12026 : 12024
     }
 	//FIXME: Before shipping to production, change this to DigiByte.sqlite
-	static let sqliteFileName = "BreadWallet.sqlite"
+	static let sqliteFileName = "DigiByte.sqlite"
     
     static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     static let applicationTitle = Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String ?? "DigiByte"

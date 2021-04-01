@@ -537,6 +537,7 @@ extension ApplicationController {
     
     func resetWindows() { self.store.perform(action: HamburgerActions.Present(modal: .none)) }
     func openDigiIDScanner() { self.store.trigger(name: .scanDigiId) }
+    func showDigiAssets() { self.store.perform(action: HamburgerActions.Present(modal: .digiAssets(nil))) }
     func showAddressBook() { self.store.perform(action: RootModalActions.Present(modal: .showAddressBook)) }
     func showReceive() { self.store.perform(action: RootModalActions.Present(modal: .receive)) }
     func showSend() { self.store.perform(action: RootModalActions.Present(modal: .send)) }

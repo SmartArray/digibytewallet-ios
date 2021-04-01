@@ -12,7 +12,7 @@ import BRCore
 
 enum SendResult {
     case success
-    case creationError(String)
+    case creationError(String, Int?)
     case publishFailure(BRPeerManagerError)
 }
 
@@ -65,7 +65,7 @@ class Sender {
 
     //Amount in bits
     func send(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
-        guard let tx = transaction else { return completion(.creationError(S.Send.createTransactionError)) }
+        guard let tx = transaction else { return completion(.creationError(S.Send.createTransactionError, 1)) }
 
         self.rate = rate
         self.comment = comment
@@ -103,8 +103,8 @@ class Sender {
             }
             let result = group.wait(timeout: .now() + 30.0)
             if result == .timedOut {
-                let alert = AlertController(title: "Error", message: "Did not sign tx within timeout", preferredStyle: .alert)
-                alert.addAction(AlertAction(title: "OK", style: .default, handler: nil))
+                let alert = AlertController(title: S.Alert.error, message: S.Transaction.signTimeout, preferredStyle: .alert)
+                alert.addAction(AlertAction(title: S.Alerts.defaultConfirmOkCaption, style: .default, handler: nil))
                 self.topViewController?.present(alert, animated: true, completion: nil)
                 return false
             }

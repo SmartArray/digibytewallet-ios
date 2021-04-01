@@ -10,10 +10,14 @@ import UIKit
 
 struct E {
     static let isTestnet: Bool = {
+        // ProcessInfo.processInfo.environment
         #if Testnet
+            print("TESTNET=1 !")
             return true
         #else
-            return false
+            let testnet = ProcessInfo.processInfo.environment["TESTNET"]
+            print("TESTNET=\(testnet ?? "0")")
+            return testnet == "1"
         #endif
     }()
     static let isTestFlight: Bool = {

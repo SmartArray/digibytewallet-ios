@@ -22,7 +22,7 @@ class AmountViewController : UIViewController, Trackable {
         if let rate = store.state.currentRate, store.state.isBtcSwapped {
             self.currencyToggle = ShadowButton(title: "\(rate.code)  (\(rate.currencySymbol))", type: .primary)
         } else {
-            self.currencyToggle = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .primary)
+            self.currencyToggle = ShadowButton(title: Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .primary)
         }
         self.feeSelector = FeeSelector(store: store)
         self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: store.state.maxDigits)
@@ -394,7 +394,7 @@ class AmountViewController : UIViewController, Trackable {
         if let rate = selectedRate {
             self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
-            self.currencyToggle.title = S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
+            self.currencyToggle.title = Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
         }
     }
 

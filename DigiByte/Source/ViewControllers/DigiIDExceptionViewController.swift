@@ -43,7 +43,7 @@ class DigiIDExceptionViewController: UITableViewController {
     
     @objc
     private func digiIDLegacyHelpTapped() {
-        showAlert(title: "Digi-ID Legacy", message: "Digi-ID Legacy refers to an outdated authentication variant of Digi-ID, which was not compatible with DigiByte Android. It is not recommended to use Digi-ID Legacy for new logins.", buttonLabel: "Understood!")
+        showAlert(title: S.Settings.digiIdLegacyTitle, message: S.Settings.digiIdLegacyDescription, buttonLabel: S.Alerts.defaultConfirmOkCaption)
     }
 
     @objc
@@ -78,7 +78,7 @@ class DigiIDExceptionViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "addCell")!
         cell.textLabel?.textAlignment = .center
         cell.textLabel?.textColor = C.Colors.lightGrey
-        let str = "Add an exception"
+        let str = S.Settings.addException
         cell.textLabel?.text = "+ \(str)"
         cell.backgroundColor = UIColor.clear
         cell.selectionStyle = .none

@@ -90,8 +90,8 @@ class AboutViewController : UIViewController {
         credits.font = UIFont(name: "Helvetica", size: 14)
         credits.textColor = C.Colors.blueGrey
         
-        versionLabel.text = "Version \(C.version)"
-        introductionLabel.text = "This app was built by DigiByte & Blockchain enthusiasts, unpaid volunteers who devoted their time and skills to a project they believe in."
+        versionLabel.text = String(format: S.About.version, C.version)
+        introductionLabel.text = S.About.introduction
         credits.attributedText = creditText()
         credits.backgroundColor = .clear
         credits.isScrollEnabled = false
@@ -134,27 +134,28 @@ class AboutViewController : UIViewController {
     private func creditText() -> NSAttributedString {
         let res = NSMutableAttributedString(string: "")
         
-        res.append(createHeading("Development\n"))
+        res.append(createHeading("\(S.About.development)\n"))
         res.append(createLine("GTO90\n"))
         res.append(createLine("Noah Seidmann\n"))
         res.append(createLine("Yoshi Jäger\n"))
         res.append(createLine("Thomas Ploentzke\n"))
         res.append(NSAttributedString(string: "\n"))
         
-        res.append(createHeading("UI\n"))
+        res.append(createHeading("\(S.About.ui)\n"))
         res.append(createLine("Damir Čengić\n"))
         res.append(createLine("Antonela Bender\n"))
         res.append(NSAttributedString(string: "\n"))
         
-        res.append(createHeading("Special Thanks\n"))
+        res.append(createHeading("\(S.About.specialThanks)\n"))
         res.append(createLine("Nigel Borreman\n"))
         res.append(createLine("Murat Akyurt\n"))
         res.append(createLine("Josiah Spackman\n"))
         res.append(createLine("Also special thanks to BRD\n"))
         res.append(NSAttributedString(string: "\n"))
         
-        res.append(createHeading("Translations\n"))
+        res.append(createHeading("\(S.About.translations)\n"))
         res.append(createLine("Rutger Krijnen\n"))
+        res.append(createLine("Nigel Borreman\n"))
         res.append(createLine("Glenn\n"))
 		res.append(createLine("GTO90\n"))
         res.append(NSAttributedString(string: "\n"))
@@ -163,6 +164,11 @@ class AboutViewController : UIViewController {
     }
 
     private func setActions() {
+    }
+    
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        let debugStr = GlobalDebug.default.serialize()
+        UIPasteboard.general.string = debugStr
     }
 
 //    private func presentURL(string: String) {

@@ -39,7 +39,7 @@ class SendViewController : UIViewController, UIImagePickerControllerDelegate, UI
         self.walletManager = walletManager
         self.initialAddress = initialAddress
         self.initialRequest = initialRequest
-        self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
+        self.currency = ShadowButton(title: Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false, scrollDownOnTap: false)
         super.init(nibName: nil, bundle: nil)
         
@@ -118,7 +118,7 @@ class SendViewController : UIViewController, UIImagePickerControllerDelegate, UI
         view.addSubview(sendButton)
         view.addSubview(dandelionSwitchContainer)
         
-        dandelionLabel.text = "Use the Dandelion Protocol for enhanced privacy"
+        dandelionLabel.text = S.Send.useDandelion
         dandelionLabel.numberOfLines = 0
         dandelionLabel.lineBreakMode = .byWordWrapping
         dandelionLabel.textColor = UIColor.white
@@ -494,7 +494,7 @@ class SendViewController : UIViewController, UIImagePickerControllerDelegate, UI
                         myself.onPublishSuccess?()
                     })
                     //self?.saveEvent("send.success")
-                case .creationError(let message):
+                case .creationError(let message, _):
                     self?.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
                     //self?.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
                 case .publishFailure(let error):
@@ -551,7 +551,7 @@ class SendViewController : UIViewController, UIImagePickerControllerDelegate, UI
         }
 
         if let name = protoReq.commonName {
-            addressCell.setContent(protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized)
+            addressCell.setContent(protoReq.pkiType != "none" ? "\(Symbols.lock) \(name.sanitized)" : name.sanitized)
         }
 
         if requestAmount > 0 {

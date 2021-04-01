@@ -241,7 +241,7 @@ fileprivate class AddressBookAddContactViewController: UIViewController {
         
         favoriteLabel.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
         favoriteLabel.textColor = UIColor.white
-        favoriteLabel.text = "Favorite" // YOshi
+        favoriteLabel.text = S.AddressBook.favorite
 
         closeButton.imageView?.tintColor = UIColor.white
         

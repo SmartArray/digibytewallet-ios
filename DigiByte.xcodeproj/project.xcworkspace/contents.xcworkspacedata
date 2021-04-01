@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/julianjager/Desktop/Digibyte/digiassets/DigiByte.xcodeproj">
+      location = "self:">
    </FileRef>
 </Workspace>

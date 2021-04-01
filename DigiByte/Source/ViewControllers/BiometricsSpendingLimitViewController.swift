@@ -107,7 +107,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
         // Custom spending limit
         } else if indexPath.section == 1 {
             // ToDo: Export these strings
-            let custom = "Custom"
+            let custom = S.TouchIdSpendingLimit.custom
             
             // If selectedLimit is not in limits, we assume a custom limit was entered.
             // In that case we will display the custom limit as a preview in this specific cell
@@ -138,7 +138,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
                 amount.heightAnchor.constraint(equalToConstant: 0.0) ])
             tableView.reloadData()
         } else {
-            let alert = AlertController(title: "Custom amount", message: "Enter a custom amount", preferredStyle: .alert)
+            let alert = AlertController(title: S.TouchIdSpendingLimit.customAmount, message: S.TouchIdSpendingLimit.customAmountDescription, preferredStyle: .alert)
             
             alert.addTextField { [unowned self] (textField) in
                 if let current = self.selectedLimit, !self.limits.contains(current) {
@@ -151,6 +151,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
                 }
             }
             
+            alert.addAction(AlertAction(title: S.Button.ok, style: .default, handler: { [unowned alert, unowned self] (_) in
             alert.addAction(AlertAction(title: "OK", style: .default, handler: { [unowned alert, unowned self] (_) in
                 let textField = alert.textFields![0]
                 guard let text = textField.text else { return }
@@ -173,6 +174,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
                 }
             }))
             
+            alert.addAction(AlertAction(title: S.Button.cancel, style: .cancel, handler: { _ in
             alert.addAction(AlertAction(title: "Cancel", style: .cancel, handler: { _ in
                 //
             }))

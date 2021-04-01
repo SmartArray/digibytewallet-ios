@@ -30,8 +30,11 @@ extension UIViewController {
         if let color = tintColor {
             close.tintColor = color
         }
-        
-        navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: close)]
+    
+        let negativeSpacer = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        negativeSpacer.width = -5
+
+        navigationItem.leftBarButtonItems = [negativeSpacer, UIBarButtonItem(customView: close)]
     }
     
     

@@ -35,6 +35,10 @@ extension UIView {
                 NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: toSuperviewEdges?.bottom ?? 0.0)
             ])
     }
+    
+    func constraint(padding: CGFloat) {
+        constrain(toSuperviewEdges: UIEdgeInsets(top: padding, left: padding, bottom: -padding, right: -padding))
+    }
 
     func constrain(_ constraints: [NSLayoutConstraint?]) {
         guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints"); return }

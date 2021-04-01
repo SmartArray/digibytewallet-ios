@@ -231,9 +231,9 @@ class WelcomeViewController: UIPageViewController, UIPageViewControllerDataSourc
         fatalError("init(coder:) has not been implemented")
     }
     
-    private let first = WelcomeViewStartPage(smallImage: UIImage(named: "welcome_midniteIcon"), title: "Welcome to the DigiByte wallet.", description: "Safely store and use your DigiByte currency.")
-    private let second = WelcomeViewPage(image: UIImage(named: "welcome_send"), title: "Send", description: "Effortlessly and instantly send your DigiByte globally.")
-    private let third = WelcomeViewPage(image: UIImage(named: "welcome_receive"), title: "Receive", description: "Create payment requests and instantly receive money from all over the world.")
+    private let first = WelcomeViewStartPage(smallImage: UIImage(named: "welcome_midniteIcon"), title: S.Welcome.page1Title, description: S.Welcome.page1Text)
+    private let second = WelcomeViewPage(image: UIImage(named: "welcome_send"), title: S.Welcome.page2Title, description: S.Welcome.page2Text)
+    private let third = WelcomeViewPage(image: UIImage(named: "welcome_receive"), title: S.Welcome.page3Title, description: S.Welcome.page3Text)
     private let fourth: WelcomeViewPage = {
         let view = UIView()
         let card = UIImageView(image: UIImage(named: "welcome_mainCard"))
@@ -241,8 +241,8 @@ class WelcomeViewController: UIPageViewController, UIPageViewControllerDataSourc
         
         let p = WelcomeViewPage(
             smallImage: UIImage(named: "welcome_touchId"),
-            title: "Safely store",
-            description: "Protect your DigiByte with a range of advanced security features.",
+            title: S.Welcome.page4Title,
+            description: S.Welcome.page4Text,
             topView: view
         )
         
@@ -256,8 +256,8 @@ class WelcomeViewController: UIPageViewController, UIPageViewControllerDataSourc
     private let fifth: WelcomeViewPage = {
         let page = WelcomeViewPage(
             image: UIImage(named: "welcome_digiid"),
-            title: "Login using Digi-ID",
-            description: "Utilize the might of blockchain security with Digi-ID Open Auth."
+            title: S.Welcome.page5Title,
+            description: S.Welcome.page4Text
         )
         
         return page

@@ -427,6 +427,22 @@ extension WalletManager : WalletAuthenticator {
             }
         }
     }
+    
+    func getAddressPrivateKey(address: String) -> BRKey? {
+        return autoreleasepool {
+            do {
+                guard let wallet = wallet else { return nil }
+                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
+                var key = BRKey()
+                var seed = UInt512()
+                BRBIP39DeriveKey(&seed, phrase, nil)
+                guard wallet.keyForAddress(address, key: &key, seed: &seed) else { return nil }
+                return key
+            } catch {
+                return nil
+            }
+        }
+    }
 
     // the 12 word wallet recovery phrase
     func seedPhrase(pin: String) -> String? {

@@ -12,7 +12,7 @@ class DAMainViewController: UITabBarController {
     // MARK: Public properties
     
     // MARK: Private properties
-    private let header = ModalHeaderView(title: "DigiAssets", style: ModalHeaderViewStyle.light)
+    private let header = ModalHeaderView(title: S.MenuButton.digiAssets, style: ModalHeaderViewStyle.light)
     private let store: BRStore
     private let wallet: BRWallet
     private let walletManager: WalletManager
@@ -20,6 +20,8 @@ class DAMainViewController: UITabBarController {
     
     private let assetOverview: DAAssetsViewController
     private let assetSend: DASendViewController
+    private let assetReceive: DAReceiveViewController
+    private let assetCreate: DACreateViewController
     private let assetBurn: DABurnViewController
     
     init(store: BRStore, walletManager: WalletManager, action: AssetMenuAction? = nil) {
@@ -27,14 +29,17 @@ class DAMainViewController: UITabBarController {
         self.wallet = walletManager.wallet!
         self.walletManager = walletManager
         
-        assetOverview = DAAssetsViewController(store: store, wallet: wallet)
-        assetSend = DASendViewController(store: store, wallet: wallet, walletManager: walletManager)
-        assetBurn = DABurnViewController(store: store, wallet: wallet, walletManager: walletManager)
+        assetOverview = DAAssetsViewController(store: store, walletManager: walletManager)
+        assetSend = DASendViewController(store: store, walletManager: walletManager)
+        assetBurn = DABurnViewController(store: store, walletManager: walletManager)
+        assetCreate = DACreateViewController(store: store, walletManager: walletManager)
+        assetReceive = DAReceiveViewController(store: store, walletManager: walletManager)
         
         self.tabs = [
             assetOverview,
+            assetCreate,
             assetSend,
-//            DAReceiveViewController(store: store, wallet: wallet),
+            assetReceive,
 //            DACreateViewController(),
             assetBurn
         ]

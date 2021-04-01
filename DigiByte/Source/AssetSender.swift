@@ -113,6 +113,7 @@ class AssetSender {
     var transaction: BRTxRef?
     var rate: Rate?
     var feePerKb: UInt64?
+    var errorCode: Int? = nil
     
     private var usedUtxos = [AssetUtxoModel]()
     
@@ -129,9 +130,10 @@ class AssetSender {
     }
 
     func createTransaction(assetModel: AssetModel, amount: Int, to address: String, burn: Bool = false, extra: UInt64 = 0) -> Bool {
-        guard let wallet = walletManager.wallet else { return false }
+        errorCode = nil
+        guard let wallet = walletManager.wallet else { errorCode = 1; return false }
         
-        addDebug("\ncreateTransaction extra=\(extra) amount=\(amount) address=\(address) burn=\(burn)\n")
+        addDebug("\ncreateTransaction extra=\(extra) amount=\(amount) address=\(address) burn=\(burn)")
         
         // Clear used utxos array
         usedUtxos = []
@@ -149,13 +151,23 @@ class AssetSender {
             var singleSum: Int = 0
             
             // Check if input was registered by wallet
-            guard wallet.hasUtxo(txid: utxo.txid, n: utxo.index) else { continue }
+            guard wallet.hasUtxo(txid: utxo.txid, n: utxo.index) else {
+                addDebug("Utxo \(utxo.txid):\(utxo.index) not available")
+                wallet.printUtxos()
+                continue
+            }
+            
+            guard wallet.utxoIsSpendable(txid: utxo.txid, n: utxo.index) else {
+                addDebug("Utxo \(utxo.txid):\(utxo.index) already spent")
+                continue
+            }
             
             utxo.assets.forEach { (infoModel) in
-                // Only add amount if it's the amount if the specific asset
+                // Only add amount if it's the amount of the specific asset
                 if infoModel.assetId == assetModel.assetId {
                     singleSum += infoModel.amount
-                    addDebug("Select Asset Utxo with amount=\(infoModel.amount), total=\(singleSum)\n")
+                    addDebug("Select Asset Utxo with amount=\(infoModel.amount), TOTAL_FROM_THIS_UTXO=\(singleSum) TOTAL=\(selectedAmountSum)")
+                    
                 }
             }
             
@@ -171,7 +183,10 @@ class AssetSender {
         usedUtxos = [AssetUtxoModel](selectedUtxos)
         
         // Exit if we don't have the amount
-        guard selectedAmountSum >= amount else { return false }
+        guard selectedAmountSum >= amount else {
+            errorCode = 2
+            return false
+        }
         
         let TRANSFER_SATOSHIS: UInt64 = 600
         
@@ -179,7 +194,15 @@ class AssetSender {
         // Use two times TRANSFER_SAT amount, one for asset target, one for internal asset change.
         // BRCore will collect the inputs that are necessary to send this amount of satoshis, incl. its fees.
         transaction = walletManager.wallet?.createTransaction(forAmount: 2 * TRANSFER_SATOSHIS + extra, toAddress: address)
-        guard let transaction = transaction else { return false }
+        guard let transaction = transaction else {
+            errorCode = 3
+            return false
+        }
+        
+        if let index = transaction.outputs.firstIndex(where: { $0.amount == 600 }) {
+            errorCode = 10
+            return false;
+        }
         
         // Remember input count
         var transactionInputAmountSum: UInt64 = 0
@@ -190,9 +213,9 @@ class AssetSender {
         // Add each utxo as an input to the transaction (in reverse order as we are adding each
         // input to index zero)
         for utxo in selectedUtxos.reversed() {
-            guard let hash = utxo.txid.hexToData?.reverse.uInt256 else { return false }
+            guard let hash = utxo.txid.hexToData?.reverse.uInt256 else { errorCode = 4; return false }
             transaction.addInputBefore(txHash: hash, index: UInt32(utxo.index), amount: UInt64(utxo.value), script: utxo.hexAsBuffer())
-            addDebug("Adding input before hash=\(hash) index=\(utxo.index) amount=\(utxo.value)\n")
+            addDebug("Adding input before hash=\(hash) index=\(utxo.index) amount=\(utxo.value)")
             transactionInputAmountSum += utxo.value
         }
         
@@ -200,7 +223,7 @@ class AssetSender {
         let TARGET_OUTPUT: Int = transaction.outputs.firstIndex { $0.swiftAddress == address }!
         let CHANGE_OUTPUT: Int = TARGET_OUTPUT == 0 ? 1 : 0
         let ASSET_CHANGE_OUTPUT: Int = transaction.outputs.count
-        addDebug("TARGET_OUTPUT=\(TARGET_OUTPUT), CHANGE_OUTPUT=\(CHANGE_OUTPUT), ASSET_CHANGE_OUTPUT=\(ASSET_CHANGE_OUTPUT)\n")
+        addDebug("TARGET_OUTPUT=\(TARGET_OUTPUT), CHANGE_OUTPUT=\(CHANGE_OUTPUT), ASSET_CHANGE_OUTPUT=\(ASSET_CHANGE_OUTPUT)")
         
         // Create transfer instructions
         var transferInstructions = [UInt8]()
@@ -275,7 +298,7 @@ class AssetSender {
         }
         
         // Exit if we don't have the amount of assets
-        guard amountNeeded == 0 else { return false }
+        guard amountNeeded == 0 else { errorCode = 5; return false }
         
         // Reduce the satoshi amount of the target output.
         // Fees will be recalculated down below.
@@ -326,8 +349,11 @@ class AssetSender {
         } else {
             // Recall this method, and ask for more inputs
             guard extra == 0 else {
+                errorCode = 6
                 return false
             }
+            
+            errorCode = 0
             let success = createTransaction(assetModel: assetModel, amount: amount, to: address, extra: costs - transactionInputAmountSum)
             return success
         }
@@ -343,16 +369,20 @@ class AssetSender {
         usedUtxos = []
     }
     
-    var debug: String = "" // YOSHI REMOVE BEFORE RELEASE
     private func addDebug(_ str: String) {
-        debug += str
+        GlobalDebug.default.add(str)
         print(str)
     }
     
     // Only supports v2
     private func transferInstruction(skip: Bool, range: Bool = false, percent: Bool = false, outputIndex: Int, amount: Int) -> [UInt8] {
         
-        addDebug("tx-instruction skip=\(skip) range=\(range) percent=\(percent) outputIndex=\(outputIndex) amount=\(amount)\n")
+        if amount == 0 {
+            addDebug("tx-instruction skip instruction outputIndex=\(outputIndex)")
+            return []
+        }
+        
+        addDebug("tx-instruction skip=\(skip) range=\(range) percent=\(percent) outputIndex=\(outputIndex) amount=\(amount)")
         
         var ret = [UInt8]()
         ret.append(UInt8(outputIndex))
@@ -392,7 +422,7 @@ class AssetSender {
 
     //Amount in bits
     func send(biometricsMessage: String, rate: Rate?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
-        guard let tx = transaction else { return completion(.creationError(S.Send.createTransactionError)) }
+        guard let tx = transaction else { return completion(.creationError(S.Send.createTransactionError, errorCode)) }
 
         self.rate = rate
         self.feePerKb = feePerKb
@@ -402,7 +432,7 @@ class AssetSender {
                 guard let myself = self else { return }
                 myself.walletManager.signTransaction(tx, biometricsPrompt: biometricsMessage, completion: { result in
                     
-                    print(tx.debugDescription)
+                    myself.addDebug(tx.debugDescription)
                     
                     if result == .success {
                         myself.publish(completion: completion)
@@ -425,6 +455,7 @@ class AssetSender {
             group.enter()
             DispatchQueue.walletQueue.async {
                 if self.walletManager.signTransaction(tx, pin: pin) {
+                    self.addDebug(tx.debugDescription)
                     self.publish(completion: completion)
                     success = true
                 }
@@ -432,8 +463,8 @@ class AssetSender {
             }
             let result = group.wait(timeout: .now() + 30.0)
             if result == .timedOut {
-                let alert = AlertController(title: "Error", message: "Did not sign tx within timeout", preferredStyle: .alert)
-                alert.addAction(AlertAction(title: "OK", style: .default, handler: nil))
+                let alert = AlertController(title: S.Alert.error, message: S.Transaction.signTimeout, preferredStyle: .alert)
+                alert.addAction(AlertAction(title: S.Alerts.defaultConfirmOkCaption, style: .default, handler: nil))
                 self.topViewController?.present(alert, animated: true, completion: nil)
                 return false
             }

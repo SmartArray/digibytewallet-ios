@@ -30,7 +30,7 @@ class ScanViewController : UIViewController, Trackable {
         }))
         fromRoot.present(alertController, animated: true, completion: nil)
     }
-
+ 
     static var isCameraAllowed: Bool {
         return AVCaptureDevice.authorizationStatus(for: AVMediaType.video) != .denied
     }
@@ -87,7 +87,7 @@ class ScanViewController : UIViewController, Trackable {
     }
 
     override func viewDidLoad() {
-        view.backgroundColor = UIColor.clear
+        view.backgroundColor = UIColor.black
         flash.tintColor = C.Colors.text
         toolbar.backgroundColor = C.Colors.background
 

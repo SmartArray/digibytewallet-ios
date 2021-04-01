@@ -11,8 +11,15 @@ import BRCore
 
 //Ideally this would be a struct, but it needs to be a class to allow
 //for lazy variables
-class Transaction {
 
+class Transaction {
+    enum AssetTransactionType {
+        case none
+        case burned
+        case sent
+        case received
+    }
+    
     enum TransactionStatus {
         case unknown
         case invalid
@@ -159,6 +166,26 @@ class Transaction {
             return output.swiftAddress
         }
     }()
+    
+    func tryReduce(_ assets: [AssetHeaderModel]) -> String? {
+        var assetName: String? = nil
+        for asset in assets {
+            guard let model = AssetHelper.getAssetModel(assetID: asset.assetId) else { return nil }
+            let current = model.getAssetName()
+            
+            if assetName != nil, assetName != current {
+                return nil
+            }
+            
+            assetName = current
+        }
+        
+        return assetName
+    }
+    
+    private func findAssetIndex(_ utxos: [ExtendedTransactionOutputModel]) -> Int {
+        return utxos.firstIndex { $0.assets.count > 0 } ?? 0
+    }
 
     var exchangeRate: Double? {
         return metaData?.exchangeRate
@@ -170,6 +197,122 @@ class Transaction {
     
     var isAssetTx: Bool {
         return BRTXContainsAsset(tx) != 0
+    }
+    
+    var assetType: AssetTransactionType {
+        guard isAssetTx else { return .none }
+        
+        if direction == .moved {
+            return .burned
+        } else if direction == .received {
+            return .received
+        } else if direction == .sent {
+            return .sent
+        }
+        
+        return .none
+    }
+    
+    var assetAmount: Int? {
+        guard
+            isAssetTx,
+            let infoModel = AssetHelper.getTransactionInfoModel(txid: hash)
+        else {
+            return nil
+        }
+        
+        // Try to retrieve single asset id
+        let hashes = infoModel.getAssetIds().unique()
+        guard hashes.count == 1 else { return nil }
+        let assetId = hashes[0]
+        
+        let received = (direction == .received)
+        var amount: Int = 0
+        
+        if direction == .moved {
+            // Use burn amount in da-data.
+            // Since this wallet only supports burning one wallet simultanenously,
+            // we will just acccess the first dadata item.
+            amount = infoModel.getBurnAmount(input: 0) ?? 0
+        } else {
+            // TX-Direction is sent|received, sum up the amount.
+            infoModel.vout.forEach { (utxo) in
+                let addresses = utxo.scriptPubKey.addresses
+                
+                utxo.assets.forEach { (assetHeaderModel) in
+                    // Skip if not asset of interest.
+                    guard
+                        assetHeaderModel.assetId == assetId,
+                        (addresses?.count ?? 0) > 0
+                    else {
+                        return
+                    }
+                    
+                    // Only include in sum, if utxo is still available
+                    guard
+                        wallet.containsAddress(addresses![0]) == received
+                    else {
+                        return
+                    }
+                    
+                    amount += assetHeaderModel.amount
+                }
+            }
+        }
+        
+        return amount
+    }
+    
+    var assetTitle: String? {
+        var ret: String? = nil
+        
+        if isAssetTx {
+            if let utxos = AssetHelper.getAssetUtxos(for: self) {
+                if utxos.count > 0 {
+                    let utxo = utxos[findAssetIndex(utxos)]
+                    
+                    if utxo.assets.count == 1 {
+                        // Metadata for this asset is available, use it's name
+                        if let assetModel = AssetHelper.getAssetModel(assetID: utxo.assets[0].assetId) {
+                            ret = assetModel.getAssetName()
+                        } else {
+                            ret = S.Assets.unresolved
+                        }
+                    } else if utxo.assets.count > 1 {
+                        // Multiple assets were transferred in one transaction.
+                        // Show the title of them, if all assets have an equal title
+                        if let reduced = tryReduce(utxo.assets) {
+                            ret = reduced
+                        } else {
+                            ret = S.Assets.multipleAssets
+                        }
+                    } else {
+                        // No assets, try once more in txin
+                        guard
+                            let infoModel = AssetHelper.getTransactionInfoModel(txid: hash),
+                            let index = infoModel.vin.firstIndex(where: { $0.assets.count > 0 })
+                        else {
+                            ret = S.Assets.noMetadata
+                            return ret
+                        }
+                        
+                        if let reduced = tryReduce(infoModel.vin[index].assets) {
+                            ret = reduced
+                        } else {
+                            ret = S.Assets.multipleAssets
+                        }
+                    }
+                } else {
+                    // No data available
+                    ret = S.Assets.noMetadata
+                }
+            } else {
+                // Asset not resolved yet
+                ret = S.Assets.unresolved
+            }
+        }
+        
+        return ret
     }
 
     var hasKvStore: Bool {

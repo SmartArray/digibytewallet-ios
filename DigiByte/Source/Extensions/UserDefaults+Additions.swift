@@ -29,6 +29,7 @@ private let digiAssetsOnboardingShownKey = "digiAssetsShown"
 private let automaticBiometricsOnStartupKey = "automaticBiometricsOnStartup"
 private let legacyDigiIdSitesKey = "legacyDigi-ID-Sites"
 private let fastSyncEnabledKey = "fastSyncEnabledKey"
+private let showRawTransactionOverviewKey = "showRawTransactionOverviewKey"
 
 extension UserDefaults {
     
@@ -190,6 +191,14 @@ extension UserDefaults {
             return defaults.bool(forKey: fastSyncEnabledKey)
         } set {
             defaults.set(newValue, forKey: fastSyncEnabledKey)
+        }
+    }
+    
+    static var showRawTransactionsOnly: Bool {
+        get {
+            return defaults.bool(forKey: showRawTransactionOverviewKey)
+        } set {
+            defaults.set(newValue, forKey: showRawTransactionOverviewKey)
         }
     }
 }

@@ -30,7 +30,7 @@ class PinView : UIView {
             return E.is320wDevice ? 35.0 : 40.0
             
         case .assets:
-            return E.is320wDevice ? 35.0 : 40.0
+            return E.is320wDevice ? 30.0 : 35.0
         }
     }
     var width: CGFloat {

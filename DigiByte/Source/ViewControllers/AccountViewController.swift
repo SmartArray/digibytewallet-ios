@@ -247,14 +247,14 @@ fileprivate class BalanceView: UIView, Subscriber {
         })
     }
     
-    private func updateSyncIcon(syncState: SyncState, isConnected: Bool) {
+    func updateSyncIcon(syncState: SyncState, isConnected: Bool) {
         topRightImage.stopAnimating()
         topRightImage.animationImages = []
         
         // Update connection status image
         if syncState == .connecting {
             // Show: Connecting...
-            lastKnownConnectionState = "Connecting..."
+            lastKnownConnectionState = S.SyncingView.connecting
             topRightImage.image = nil
             
             topRightImage.animationImages = [
@@ -270,12 +270,12 @@ fileprivate class BalanceView: UIView, Subscriber {
         
         if !isConnected {
             // Show: Not connected
-            lastKnownConnectionState = "Not connected"
+            lastKnownConnectionState = S.NodeSelector.notConnected
             topRightImage.image = UIImage(named: "disconnected")?.withRenderingMode(.alwaysTemplate)
             topRightImage.tintColor = C.Colors.weirdRed
         } else {
             // Show: connected
-            lastKnownConnectionState = "Connected to network"
+            lastKnownConnectionState = S.SyncingView.syncing
             topRightImage.image = UIImage(named: "connected")?.withRenderingMode(.alwaysTemplate)
             topRightImage.tintColor = C.Colors.weirdGreen
         }
@@ -355,6 +355,24 @@ fileprivate class BalanceView: UIView, Subscriber {
         
         topRightImage.contentMode = .scaleAspectFit
         topRightImage.tintColor = .white
+        
+        if #available(iOS 13.0, *) {
+            let standard = UINavigationBarAppearance()
+            standard.configureWithTransparentBackground()
+
+            standard.backgroundColor = .clear
+            standard.titleTextAttributes = [.foregroundColor: UIColor.white]
+            
+            let button = UIBarButtonItemAppearance(style: .plain)
+            button.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
+            standard.buttonAppearance = button
+            
+            let done = UIBarButtonItemAppearance(style: .done)
+            done.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
+            standard.doneButtonAppearance = done
+            
+            UINavigationBar.appearance().standardAppearance = standard
+        }
     }
     
     private func updateBalances(animatedValue: Bool = true) {
@@ -439,6 +457,7 @@ fileprivate class CustomSegmentedControl: UIControl {
     
     private func styleView() {
         backgroundColor = C.Colors.background
+    
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -613,9 +632,15 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
         didSet {
             guard let walletManager = walletManager else { return }
             
-            AssetHelper.addressPartOfWalletCallback = { [weak self] address in
-                guard let walletManager = self?.walletManager else { return false }
-                return walletManager.wallet?.containsAddress(address) ?? false
+            AssetHelper.assetWasNotSpentCallback = { [weak self] (txid, n) -> Bool in
+                guard let wallet = self?.walletManager?.wallet else { return false }
+                
+                let hasUtxo = wallet.hasUtxo(txid: txid, n: n)
+                let isSpendable =  wallet.utxoIsSpendable(txid: txid, n: n)
+                
+                GlobalDebug.default.add("\(txid):\(n) => hasUtxo=\(hasUtxo), isSpendable=\(isSpendable)")
+                
+                return hasUtxo && isSpendable
             }
             
             if !walletManager.noWallet {
@@ -648,6 +673,12 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
         }
     }
     
+    func assetTxSelected(by hash: String) {
+        guard let txIdx = store.state.walletState.transactions.firstIndex(where: { $0.hash == hash }) else { return }
+        let tx = store.state.walletState.transactions[txIdx]
+        assetTxSelected(tx)        
+    }
+    
     func assetTxSelected(_ tx: Transaction) {
         assert(tx.isAssetTx)
         
@@ -658,6 +689,7 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
         
         if
             let infoModel = AssetHelper.getTransactionInfoModel(txid: tx.hash),
+            infoModel.temporary != true,
             AssetHelper.hasAllAssetModels(for: infoModel.getAssetIds())
         {
             // Display asset if all required models exist
@@ -667,7 +699,7 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
             self.showSingleDigiAssetsConfirmViewIfNeeded(for: tx) { utxos in
                 guard utxos.count > 0 else {
                     self.didSelectTransaction(hash: tx.hash)
-                    self.showError(with: "No asset data available")
+                    self.showError(with: S.Assets.NoAssetData)
                     return
                 }
                 
@@ -722,9 +754,25 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
             self.present(self.loadingAssetsModalView, animated: true, completion: nil)
         }
         
+        // Update progress when resolving Assets
+        AssetNotificationCenter.instance.addObserver(forName: AssetNotificationCenter.notifications.updateProgress, object: nil, queue: nil) { notification in
+            if
+                let current = notification.userInfo?["current"] as? Int,
+                let total = notification.userInfo?["total"] as? Int {
+                self.loadingAssetsModalView.updateStep(current: current, total: total)
+            }
+        }
+        
         // Completed fetching new assets
         AssetNotificationCenter.instance.addObserver(forName: AssetNotificationCenter.notifications.fetchedAssets, object: nil, queue: nil) { _ in
             self.loadingAssetsModalView.dismiss(animated: true, completion: nil)
+        }
+        
+        // A Tx was selected in the Asset's Detail View. Show the drawer menu, if the txhash exists.
+        AssetNotificationCenter.instance.addObserver(forName: AssetNotificationCenter.notifications.assetTxSelected, object: nil, queue: nil) { notification in
+            if let hash = notification.userInfo?["tx"] as? String {
+                self.assetTxSelected(by: hash)
+            }
         }
     }
 
@@ -744,7 +792,7 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
     
     private let navigationDrawer = NavigationDrawer(id: "navigation", walletTitle: C.applicationTitle, version: C.version)
     private let assetDrawer = AssetDrawer(id: "assets")
-    private var loadingAssetsModalView: UIViewController!
+    private var loadingAssetsModalView: DGBModalLoadingView!
     
     private var assetResolver: AssetResolver? = nil
     
@@ -883,7 +931,7 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
             }
         } else {
             // if the menu was dragged less than half of it's width, close it. Otherwise, open it.
-            if menuLeftConstraint.constant < -width / 2 {
+            if menuLeftConstraint.constant < -width * 2 / 3 {
                 self.closeNavigationDrawer()
             } else {
                 self.openNavigationDrawer()
@@ -918,7 +966,7 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
                 }
                 view.layoutIfNeeded()
             } else {
-                if menuLeftConstraint.constant < -width / 2 {
+                if menuLeftConstraint.constant < -width / 3 {
                     self.closeNavigationDrawer()
                 } else {
                     self.openNavigationDrawer()
@@ -948,7 +996,7 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
                 }
                 view.layoutIfNeeded()
             } else {
-                if assetDrawerRightConstraint.constant > width / 2 {
+                if assetDrawerRightConstraint.constant > width / 3 {
                     self.closeAssetDrawer()
                 } else {
                     self.openAssetDrawer()
@@ -972,12 +1020,25 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
 //        }
         
         navigationDrawer.addButton(title: S.MenuButton.digiAssets, icon: UIImage(named: "digiassets")!) {
+            guard !UserDefaults.showRawTransactionsOnly else {
+                // Please Enable DigiAsset Support in Settings
+                let vc = DGBConfirmAlert(title: S.Assets.protocolDisabled, message: S.Assets.protocolDisabledDescription, image: nil, okTitle: S.Button.ok, cancelTitle: nil, alternativeButtonTitle: nil)
+                vc.contentLabel.textAlignment = .center
+                
+                vc.confirmCallback = { close in
+                    close()
+                }
+                
+                self.present(vc, animated: true, completion: nil)
+                return
+            }
+            
             // Show confirmation alert (address disclosure)
-            if !self.showDigiAssetsConfirmViewIfNeeded { infoModels in
+            if !self.showDigiAssetsConfirmViewIfNeeded({ infoModels in
                 // Models were probably resolved
                 guard infoModels.count > 0 else { return }
                 self.store.perform(action: HamburgerActions.Present(modal: .digiAssets(nil)))
-            } {
+            }) {
                 self.store.perform(action: HamburgerActions.Present(modal: .digiAssets(nil)))
             }
         }
@@ -1074,7 +1135,7 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
     }
     
     func closeNavigationDrawer() {
-        guard navigationDrawerOpen else { return }
+//        guard navigationDrawerOpen else { return }
         navigationMenuLeftConstraint?.constant = -navigationDrawer.frame.width
         
         UIView.spring(0.3, animations: {
@@ -1165,6 +1226,10 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
         
         fadeView.alpha = 0
         fadeView.isHidden = true
+        
+        if let walletState = walletManager?.store.state.walletState {
+            balanceView.updateSyncIcon(syncState: walletState.syncState, isConnected: walletState.isConnected)
+        }
     }
     
     private func addSubviews() {
@@ -1220,9 +1285,13 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
     
     func showSingleDigiAssetsConfirmViewIfNeeded(for tx: Transaction, _ callback: (([TransactionInfoModel]) -> Void)? = nil) {
         // Check if models already exist in cache
-        if let infoModel = AssetHelper.getTransactionInfoModel(txid: tx.hash) {
-            // Exit if we have all asset utxos and all required models
-            if AssetHelper.hasAllAssetModels(for: infoModel.getAssetIds()) {
+        if
+            let infoModel = AssetHelper.getTransactionInfoModel(txid: tx.hash) {
+            // Do not show confirm view,
+            // if we have all asset utxos and all required models.
+            if
+                infoModel.temporary != true,
+                AssetHelper.hasAllAssetModels(for: infoModel.getAssetIds()) {
                 callback?([infoModel])
                 return
             }
@@ -1262,11 +1331,11 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
     func showDigiAssetsConfirmViewIfNeeded(_ callback: (([TransactionInfoModel]) -> Void)? = nil) -> Bool {
         guard !AssetHelper.resolvedAllAssets(for: self.store.state.walletState.transactions) else { return false }
             
-        let confirmView = DGBConfirmAlert(title: S.Assets.receivedAssetsTitle, message: S.Assets.receivedAssetsMessage, image: UIImage(named: "privacy"), okTitle: S.Assets.confirmAssetsResolve, cancelTitle: S.Assets.skipAssetsResolve)
+        let confirmView = DGBConfirmAlert(title: S.Assets.receivedAssetsTitle, message: S.Assets.receivedAssetsMessage, image: UIImage(named: "privacy"), okTitle: S.Assets.confirmAssetsResolve, cancelTitle: S.Assets.cancelAssetsResolve, alternativeButtonTitle: S.Assets.continueWithoutSync)
         
         let confirmCallback: () -> Void = {
             let transactions = self.store.state.walletState.transactions
-            if self.assetResolver != nil { self.assetResolver!.cancel() }
+            if let resolver = self.assetResolver { resolver.cancel() }
             self.assetResolver = AssetHelper.resolveAssetTransaction(for: transactions.map({ $0.hash }), callback: callback)
         }
         
@@ -1277,6 +1346,11 @@ class AccountViewController: UIViewController, Subscriber, UIPageViewControllerD
         
         confirmView.cancelCallback = { (close: DGBCallback) in
             close()
+        }
+        
+        confirmView.alternativeCallback = { (close: DGBCallback) in
+            close()
+            self.store.perform(action: HamburgerActions.Present(modal: .digiAssets(nil)))
         }
         
         guard !UserDefaults.Privacy.automaticallyResolveAssets else {

@@ -500,6 +500,10 @@ class BRWallet {
         return BRWalletAddressIsUsed(cPtr, address) != 0
     }
     
+    func keyForAddress(_ address: String, key: inout BRKey, seed: inout UInt512) -> Bool {
+        return BRWalletGetAddressPrivateKey(cPtr, &key, address, address.count, &seed, MemoryLayout<UInt512>.stride) != 0
+    }
+    
     // transactions registered in the wallet, sorted by date, oldest first
     var transactions: [BRTxRef?] {
         var transactions = [BRTxRef?](repeating: nil, count: BRWalletTransactions(cPtr, nil, 0))
@@ -635,6 +639,18 @@ class BRWallet {
         return BRWalletHasAssetUtxo(cPtr, txid, Int32(n)) != 0;
     }
     
+    func printUtxos() {
+        return BRWalletPrintUtxos(cPtr)
+    }
+    
+    func utxoIsSpendable(txid: String, n: Int) -> Bool {
+        return BRWalletUtxoSpendable(cPtr, txid, Int32(n)) != 0;
+    }
+    
+    func utxoWasSpent(txid: String, n: Int) -> Bool {
+        return BRWalletUtxoSpendable(cPtr, txid, Int32(n)) == 0;
+    }
+    
     // outputs below this amount are uneconomical due to fees (TX_MIN_OUTPUT_AMOUNT is the absolute min output amount)
     var minOutputAmount: UInt64 {
         return BRWalletMinOutputAmount(cPtr)
@@ -672,10 +688,43 @@ class BRPeerManager {
           listener: BRPeerManagerListener, startBlock: BRMerkleBlock? = nil) {
         var blockRefs = blocks
         
-        if let startBlock = startBlock {
-            // if startBlock was passed, we use Ex function to start sync from that specific block
-            startSyncFrom = UnsafeMutablePointer<BRMerkleBlock>.allocate(capacity: 1)
-            startSyncFrom?.initialize(to: startBlock)
+        if E.isTestnet {
+            /**
+               TESTNET
+             */
+            if let startBlock = startBlock {
+                // if startBlock was passed, we use Ex function to start sync from that specific block
+                startSyncFrom = UnsafeMutablePointer<BRMerkleBlock>.allocate(capacity: 1)
+                startSyncFrom?.initialize(to: startBlock)
+                
+                
+                guard let cPtr = BPPeerManagerTestNetNewEx(wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
+                                                         &blockRefs, blockRefs.count, peers, peers.count, startSyncFrom) else { return nil }
+                self.cPtr = cPtr
+            } else {
+                // just start sync using checkpoints, etc.
+                guard let cPtr = BPPeerManagerTestNetNew(wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
+                                                         &blockRefs, blockRefs.count, peers, peers.count) else { return nil }
+                self.cPtr = cPtr
+            }
+        } else {
+            /**
+               MAINNET
+             */
+            if let startBlock = startBlock {
+                // if startBlock was passed, we use Ex function to start sync from that specific block
+                startSyncFrom = UnsafeMutablePointer<BRMerkleBlock>.allocate(capacity: 1)
+                startSyncFrom?.initialize(to: startBlock)
+                
+                guard let cPtr = BPPeerManagerMainNetNewEx(wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
+                                                         &blockRefs, blockRefs.count, peers, peers.count, startSyncFrom) else { return nil }
+                self.cPtr = cPtr
+            } else {
+                // just start sync using checkpoints, etc.
+                guard let cPtr = BPPeerManagerMainNetNew(wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
+                                                         &blockRefs, blockRefs.count, peers, peers.count) else { return nil }
+                self.cPtr = cPtr
+            }
             
             guard let cPtr = BPPeerManagerMainNetNewEx(wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
                                                      &blockRefs, blockRefs.count, peers, peers.count, startSyncFrom) else { return nil }

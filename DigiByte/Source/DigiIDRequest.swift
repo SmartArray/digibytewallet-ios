@@ -39,13 +39,25 @@ struct DigiIdRequest {
                         
                         switch key {
                         case "x":
-                            callbackID = value
+                            self.callbackID = value
                         case "origin":
                             // callback url
-                            originURL = value
+                            self.originURL = value
                         case "u":
                             // unsecure
                             self.https = (value == "0")
+                        case "tos":
+                            // contract
+                            if let decodedData = Data(base64Encoded: value)  {
+                                self.contract = String(data: decodedData, encoding: .utf8)
+                            } else {
+                                self.error = "Invalid Contract"
+                            }
+                        case "assetId":
+                            // Asset signer
+                            self.assetId = value
+                            if string.contains("&dual") { self.dualAsset = true }
+                            
                         default:
                             print("Keys in DigiId url scheme not found: \(key)")
                         }
@@ -126,4 +138,9 @@ struct DigiIdRequest {
     var https: Bool? = true
     var signString: String
     var port: NSNumber?
+    var contract: String? = nil
+    var assetId: String? = nil // DigiAsset ID
+    var dualAsset: Bool = false
+    
+    var error: String? = nil
 }

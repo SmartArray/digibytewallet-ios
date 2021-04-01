@@ -26,6 +26,7 @@
 import UIKit
 import LocalAuthentication
 import UserNotifications
+import Kingfisher
 
 var _senderApp: String = "";
 
@@ -78,6 +79,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
+        ImageCache.default.diskStorage.config.expiration = .never
+        
 #if Debug
 
         if false {
@@ -137,6 +140,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
                 case "App.Shortcuts.AddressBook":
                     self.applicationController.showAddressBook()
+                    break
+                
+                case "App.Shortcuts.DigiAssets":
+                    self.applicationController.showDigiAssets()
                     break
                 
                 default:

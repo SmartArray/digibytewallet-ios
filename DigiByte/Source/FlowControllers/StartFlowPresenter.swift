@@ -231,7 +231,6 @@ class StartFlowPresenter : Subscriber {
                     }
                 }
             })
-            
         }
 
         navigationController?.setNavigationBarHidden(false, animated: false)

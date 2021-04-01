@@ -594,6 +594,13 @@ class LoginViewController: PINViewController, Trackable {
             lock.centerXAnchor.constraint(equalTo: label.centerXAnchor) ])
         view.layoutIfNeeded()
         
+        // Haptic Feedback when unlocking the wallet
+        if #available(iOS 10.0, *) {
+            let feedbackGenerator = UINotificationFeedbackGenerator()
+            feedbackGenerator.prepare()
+            feedbackGenerator.notificationOccurred(.success)
+        }
+        
         UIView.spring(0.6, delay: 0.1, animations: {
             self.pinView.alpha = 0.0
             self.pinPad.view.alpha = 0.0

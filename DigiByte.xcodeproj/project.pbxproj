@@ -19,8 +19,9 @@
 		39082BF622762CF9008657F6 /* DGBTodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39082BF522762CF9008657F6 /* DGBTodayViewController.swift */; };
 		391BE382233372DF0079B56A /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391BE381233372DF0079B56A /* VisualEffectView.swift */; };
 		391BE383233372DF0079B56A /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391BE381233372DF0079B56A /* VisualEffectView.swift */; };
+		3930DBF924922AEC00167D09 /* GlobalDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3930DBF824922AEC00167D09 /* GlobalDebug.swift */; };
+		395262EB25A094E100C9CDEB /* MarqueeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D504532397FFA500A8B339 /* MarqueeLabel.swift */; };
 		3959E468239A62AA0008B531 /* DATextBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3959E467239A62AA0008B531 /* DATextBox.swift */; };
-		396B869623DFFC5200D0D243 /* Storez.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3984BB752395210300A775A7 /* Storez.framework */; };
 		3981267E233281050019D5E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 398124B0233281030019D5E6 /* Assets.xcassets */; };
 		39812685233281050019D5E6 /* BIP39Words.plist in Resources */ = {isa = PBXBuildFile; fileRef = 398124B8233281030019D5E6 /* BIP39Words.plist */; };
 		39812687233281050019D5E6 /* Icon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 398124BF233281030019D5E6 /* Icon.xcassets */; };
@@ -71,7 +72,6 @@
 		398126C0233281050019D5E6 /* BRAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3981256A233281030019D5E6 /* BRAPIClient.swift */; };
 		398126C1233281050019D5E6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3981256B233281030019D5E6 /* Extensions.swift */; };
 		398126C2233281050019D5E6 /* TxMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3981256C233281030019D5E6 /* TxMetaData.swift */; };
-		398126C3233281050019D5E6 /* BRBSPatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3981256D233281040019D5E6 /* BRBSPatch.swift */; };
 		398126C4233281050019D5E6 /* BRWalletPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3981256E233281040019D5E6 /* BRWalletPlugin.swift */; };
 		398126C5233281050019D5E6 /* BRHTTPFileMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3981256F233281040019D5E6 /* BRHTTPFileMiddleware.swift */; };
 		398126C6233281050019D5E6 /* BRHTTPRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39812570233281040019D5E6 /* BRHTTPRouter.swift */; };
@@ -305,12 +305,15 @@
 		3984BB9D2396684A00A775A7 /* UserDefaults+PrivacyAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3984BB9C2396684A00A775A7 /* UserDefaults+PrivacyAdditions.swift */; };
 		3984BB9F2397927800A775A7 /* AssetDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3984BB9E2397927800A775A7 /* AssetDrawer.swift */; };
 		3984BBA2239792BD00A775A7 /* NavigationDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3984BBA1239792BD00A775A7 /* NavigationDrawer.swift */; };
+		398625AA25D7F86B00A3BC93 /* UIViewEffectViewiOS14.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398625A925D7F86B00A3BC93 /* UIViewEffectViewiOS14.swift */; };
+		398625AB25D7F86B00A3BC93 /* UIViewEffectViewiOS14.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398625A925D7F86B00A3BC93 /* UIViewEffectViewiOS14.swift */; };
 		398A85BD2330E97900119827 /* odocrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 398A85BB2330E97900119827 /* odocrypt.c */; };
 		398A85C02330E9BA00119827 /* BRKeccak-800-SnP.c in Sources */ = {isa = PBXBuildFile; fileRef = 398A85BF2330E9B900119827 /* BRKeccak-800-SnP.c */; };
 		398A85C22330E9D100119827 /* brg_endian.h in Headers */ = {isa = PBXBuildFile; fileRef = 398A85C12330E9D100119827 /* brg_endian.h */; };
 		39A4EB232393E3B500B5664F /* AssetHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A4EB222393E3B500B5664F /* AssetHelper.swift */; };
 		39A4EB712393E70400B5664F /* DGBConfirmAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A4EB702393E70400B5664F /* DGBConfirmAlert.swift */; };
 		39A4EB7323940D5400B5664F /* BRDigiAsset.c in Sources */ = {isa = PBXBuildFile; fileRef = 39DEDAC023490B5B005F648B /* BRDigiAsset.c */; };
+		39C2F8AE247007970053518A /* Sequence+Unique.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C2F8AD247007970053518A /* Sequence+Unique.swift */; };
 		39C4A7762339104A00D84AF6 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 398124BA233281030019D5E6 /* Lato-Italic.ttf */; };
 		39C4A7772339104A00D84AF6 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 398124C4233281030019D5E6 /* Rubik-Bold.ttf */; };
 		39C4A7782339104A00D84AF6 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 398124C6233281030019D5E6 /* Lato-Bold.ttf */; };
@@ -321,15 +324,17 @@
 		39CD011C233A355400FCF02C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39CD011B233A355400FCF02C /* MainInterface.storyboard */; };
 		39CD011F233A379700FCF02C /* DigiByte Wallet.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 39082BDB22760674008657F6 /* DigiByte Wallet.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		39D0349E233254B000DE3E78 /* ToDos.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 39D0349D233254AF00DE3E78 /* ToDos.rtf */; };
+		39D43C01246802D600B51191 /* sqlite3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 752FB04A1DF8BE6B009086FB /* sqlite3.framework */; };
 		39D504502397BFE600A8B339 /* Kingfisher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D5044B2397BFDC00A8B339 /* Kingfisher.framework */; };
 		39D504512397BFE600A8B339 /* Kingfisher.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39D5044B2397BFDC00A8B339 /* Kingfisher.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		39D504542397FFA500A8B339 /* MarqueeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D504532397FFA500A8B339 /* MarqueeLabel.swift */; };
 		39D50456239948EF00A8B339 /* DADropDown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D50455239948EF00A8B339 /* DADropDown.swift */; };
 		39DEDAC123490B5B005F648B /* BRDigiAsset.c in Sources */ = {isa = PBXBuildFile; fileRef = 39DEDAC023490B5B005F648B /* BRDigiAsset.c */; };
 		39DEDAC423490F0F005F648B /* BRAssetData.c in Sources */ = {isa = PBXBuildFile; fileRef = 39DEDAC323490F0F005F648B /* BRAssetData.c */; };
 		39E304582338B3F0008F8386 /* UIImage+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398125A3233281040019D5E6 /* UIImage+Utils.swift */; };
 		39E304592338B413008F8386 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398124F1233281030019D5E6 /* Utils.swift */; };
 		39E3045A2338B434008F8386 /* UserDefaults+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398125AA233281040019D5E6 /* UserDefaults+Shared.swift */; };
+		39F76DBD247C528800BF3241 /* Symbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F76DBC247C528800BF3241 /* Symbols.swift */; };
+		39FA0F59246808E500A0742D /* BRBSPatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3981256D233281040019D5E6 /* BRBSPatch.swift */; };
 		39FFD180239D563A00CFB302 /* DADetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FFD17F239D563A00CFB302 /* DADetailViewController.swift */; };
 		39FFD18C239E604500CFB302 /* AssetSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FFD18B239E604500CFB302 /* AssetSender.swift */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
@@ -354,7 +359,6 @@
 		752438871DAAC87E00844BEC /* iter_delegpt.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD3FD1DAA0E3E0075898E /* iter_delegpt.c */; };
 		752438881DAAC8B000844BEC /* val_secalgo.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6C51DAA0E400075898E /* val_secalgo.c */; };
 		752FB04C1DF8BEEC009086FB /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 75FEFD1B1DAED56E00203D3A /* libsqlite3.tbd */; };
-		752FB04D1DF8BF4B009086FB /* sqlite3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 752FB04A1DF8BE6B009086FB /* sqlite3.framework */; };
 		754868CF1DAB57A200732D70 /* msgencode.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6851DAA0E400075898E /* msgencode.c */; };
 		754868D01DAB57BC00732D70 /* iter_fwd.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD4011DAA0E3E0075898E /* iter_fwd.c */; };
 		754868D11DAB57E900732D70 /* packed_rrset.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD68B1DAA0E400075898E /* packed_rrset.c */; };
@@ -740,6 +744,7 @@
 		39082BF42276089B008657F6 /* DigiByte TodayExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "DigiByte TodayExtension.entitlements"; sourceTree = "<group>"; };
 		39082BF522762CF9008657F6 /* DGBTodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DGBTodayViewController.swift; sourceTree = "<group>"; };
 		391BE381233372DF0079B56A /* VisualEffectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VisualEffectView.swift; path = Modules/VisualEffectView/Sources/VisualEffectView.swift; sourceTree = SOURCE_ROOT; };
+		3930DBF824922AEC00167D09 /* GlobalDebug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalDebug.swift; sourceTree = "<group>"; };
 		3959E467239A62AA0008B531 /* DATextBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DATextBox.swift; sourceTree = "<group>"; };
 		39812494233281030019D5E6 /* digibyteUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = digibyteUITests.swift; sourceTree = "<group>"; };
 		39812495233281030019D5E6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1158,12 +1163,14 @@
 		3984BB9C2396684A00A775A7 /* UserDefaults+PrivacyAdditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+PrivacyAdditions.swift"; sourceTree = "<group>"; };
 		3984BB9E2397927800A775A7 /* AssetDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDrawer.swift; sourceTree = "<group>"; };
 		3984BBA1239792BD00A775A7 /* NavigationDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationDrawer.swift; sourceTree = "<group>"; };
+		398625A925D7F86B00A3BC93 /* UIViewEffectViewiOS14.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIViewEffectViewiOS14.swift; path = Modules/VisualEffectView/Sources/UIViewEffectViewiOS14.swift; sourceTree = SOURCE_ROOT; };
 		398A85BB2330E97900119827 /* odocrypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = odocrypt.c; sourceTree = "<group>"; };
 		398A85BE2330E9B900119827 /* BRKeccak-800-SnP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BRKeccak-800-SnP.h"; sourceTree = "<group>"; };
 		398A85BF2330E9B900119827 /* BRKeccak-800-SnP.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "BRKeccak-800-SnP.c"; sourceTree = "<group>"; };
 		398A85C12330E9D100119827 /* brg_endian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = brg_endian.h; sourceTree = "<group>"; };
 		39A4EB222393E3B500B5664F /* AssetHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetHelper.swift; sourceTree = "<group>"; };
 		39A4EB702393E70400B5664F /* DGBConfirmAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DGBConfirmAlert.swift; sourceTree = "<group>"; };
+		39C2F8AD247007970053518A /* Sequence+Unique.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+Unique.swift"; sourceTree = "<group>"; };
 		39CD011B233A355400FCF02C /* MainInterface.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		39D0349D233254AF00DE3E78 /* ToDos.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = ToDos.rtf; sourceTree = "<group>"; };
 		39D504442397BFDC00A8B339 /* Kingfisher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Kingfisher.xcodeproj; path = Modules/Kingfisher/Kingfisher.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -1176,6 +1183,7 @@
 		39DEDAC023490B5B005F648B /* BRDigiAsset.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = BRDigiAsset.c; sourceTree = "<group>"; };
 		39DEDAC223490F0F005F648B /* BRAssetData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BRAssetData.h; sourceTree = "<group>"; };
 		39DEDAC323490F0F005F648B /* BRAssetData.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = BRAssetData.c; sourceTree = "<group>"; };
+		39F76DBC247C528800BF3241 /* Symbols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Symbols.swift; sourceTree = "<group>"; };
 		39FFD17F239D563A00CFB302 /* DADetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DADetailViewController.swift; sourceTree = "<group>"; };
 		39FFD18B239E604500CFB302 /* AssetSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSender.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1919,16 +1927,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39D43C01246802D600B51191 /* sqlite3.framework in Frameworks */,
 				39D504502397BFE600A8B339 /* Kingfisher.framework in Frameworks */,
 				3984BB9A2395212400A775A7 /* Storez.framework in Frameworks */,
 				22A9A9661DF61FEE000F0016 /* WebKit.framework in Frameworks */,
 				22A9A9641DF61FE7000F0016 /* Security.framework in Frameworks */,
 				22A9A9621DF61FE0000F0016 /* SystemConfiguration.framework in Frameworks */,
 				22A9A9601DF61FD8000F0016 /* CoreLocation.framework in Frameworks */,
-				396B869623DFFC5200D0D243 /* Storez.framework in Frameworks */,
 				22A9A95E1DF61FD0000F0016 /* PushKit.framework in Frameworks */,
 				223DB21B1DF69F0F0076A151 /* libbz2.framework in Frameworks */,
-				752FB04D1DF8BF4B009086FB /* sqlite3.framework in Frameworks */,
 				759DA0BE1DAC36A3008CC49B /* libBRCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2018,6 +2025,7 @@
 		391BE380233372AE0079B56A /* VisualEffectView */ = {
 			isa = PBXGroup;
 			children = (
+				398625A925D7F86B00A3BC93 /* UIViewEffectViewiOS14.swift */,
 				391BE381233372DF0079B56A /* VisualEffectView.swift */,
 			);
 			path = VisualEffectView;
@@ -2204,6 +2212,7 @@
 				3981255E233281030019D5E6 /* Strings.swift */,
 				3981255F233281030019D5E6 /* Functions.swift */,
 				39812560233281030019D5E6 /* ArticleIds.swift */,
+				39F76DBC247C528800BF3241 /* Symbols.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -2303,6 +2312,7 @@
 				398125AB233281040019D5E6 /* String+Keys.swift */,
 				398125AC233281040019D5E6 /* UserDefaults+Additions.swift */,
 				3984BB9C2396684A00A775A7 /* UserDefaults+PrivacyAdditions.swift */,
+				39C2F8AD247007970053518A /* Sequence+Unique.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2632,6 +2642,7 @@
 			isa = PBXGroup;
 			children = (
 				39A4EB222393E3B500B5664F /* AssetHelper.swift */,
+				3930DBF824922AEC00167D09 /* GlobalDebug.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -3962,7 +3973,7 @@
 			attributes = {
 				CLASSPREFIX = BR;
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = "DigiByte Foundation NZ Limited";
 				TargetAttributes = {
 					22A9A9951DF63426000F0016 = {
@@ -4591,6 +4602,7 @@
 				398126B8233281050019D5E6 /* BRCameraPlugin.swift in Sources */,
 				3984BBA2239792BD00A775A7 /* NavigationDrawer.swift in Sources */,
 				398126FD233281050019D5E6 /* String+Keys.swift in Sources */,
+				3930DBF924922AEC00167D09 /* GlobalDebug.swift in Sources */,
 				398126C6233281050019D5E6 /* BRHTTPRouter.swift in Sources */,
 				3981271F233281050019D5E6 /* ScanViewController.swift in Sources */,
 				39812694233281050019D5E6 /* BRAPIClient+Events.swift in Sources */,
@@ -4631,6 +4643,7 @@
 				398126E9233281050019D5E6 /* UIView+BRWAdditions.swift in Sources */,
 				398126B5233281050019D5E6 /* Strings.swift in Sources */,
 				398126FE233281050019D5E6 /* UserDefaults+Additions.swift in Sources */,
+				39F76DBD247C528800BF3241 /* Symbols.swift in Sources */,
 				39A4EB232393E3B500B5664F /* AssetHelper.swift in Sources */,
 				39812724233281050019D5E6 /* VerifyPinViewController.swift in Sources */,
 				398126AC233281050019D5E6 /* UserDefaultsUpdater.swift in Sources */,
@@ -4639,7 +4652,6 @@
 				398126D3233281050019D5E6 /* KeyboardNotificationInfo.swift in Sources */,
 				3981277F233281050019D5E6 /* RoundedContainer.swift in Sources */,
 				39812745233281050019D5E6 /* ExchangeUpdater.swift in Sources */,
-				39D504542397FFA500A8B339 /* MarqueeLabel.swift in Sources */,
 				39812769233281050019D5E6 /* DescriptionSendCell.swift in Sources */,
 				398126EC233281050019D5E6 /* UIViewController+Alerts.swift in Sources */,
 				3981272F233281050019D5E6 /* NodeSelectorViewController.swift in Sources */,
@@ -4647,7 +4659,6 @@
 				398126F8233281050019D5E6 /* String+Additions.swift in Sources */,
 				39812737233281050019D5E6 /* TransactionsTableViewController.swift in Sources */,
 				39812770233281050019D5E6 /* BlinkingView.swift in Sources */,
-				398126C3233281050019D5E6 /* BRBSPatch.swift in Sources */,
 				3981270A233281050019D5E6 /* ReScanViewController.swift in Sources */,
 				3981274E233281050019D5E6 /* SendAmountCell.swift in Sources */,
 				39812757233281050019D5E6 /* AnimatableIcon.swift in Sources */,
@@ -4730,6 +4741,7 @@
 				39FFD18C239E604500CFB302 /* AssetSender.swift in Sources */,
 				39812744233281050019D5E6 /* WalletManager.swift in Sources */,
 				3981273E233281050019D5E6 /* DismissModalAnimator.swift in Sources */,
+				395262EB25A094E100C9CDEB /* MarqueeLabel.swift in Sources */,
 				398126CF233281050019D5E6 /* BRTar.swift in Sources */,
 				398126A9233281050019D5E6 /* Transaction.swift in Sources */,
 				398126F1233281050019D5E6 /* UITableView+Additions.swift in Sources */,
@@ -4787,6 +4799,7 @@
 				39812738233281050019D5E6 /* AccountViewController.swift in Sources */,
 				3981270B233281050019D5E6 /* BCashTransactionViewController.swift in Sources */,
 				39812775233281050019D5E6 /* ModalHeaderView.swift in Sources */,
+				39FA0F59246808E500A0742D /* BRBSPatch.swift in Sources */,
 				3981270E233281050019D5E6 /* ManageWalletViewController.swift in Sources */,
 				39812786233281050019D5E6 /* BRCore.swift in Sources */,
 				398126D9233281050019D5E6 /* Types.swift in Sources */,
@@ -4798,10 +4811,12 @@
 				3981270D233281050019D5E6 /* BRDigiAssetsTestViewController.swift in Sources */,
 				3981273A233281050019D5E6 /* ModalTransitionDelegate.swift in Sources */,
 				3981272C233281050019D5E6 /* DASendViewController.swift in Sources */,
+				398625AA25D7F86B00A3BC93 /* UIViewEffectViewiOS14.swift in Sources */,
 				39812787233281050019D5E6 /* StartNavigationDelegate.swift in Sources */,
 				3981278A233281050019D5E6 /* FirstBlockWithWalletTxRequest.swift in Sources */,
 				398126B3233281050019D5E6 /* FeeUpdater.swift in Sources */,
 				3984BB9F2397927800A775A7 /* AssetDrawer.swift in Sources */,
+				39C2F8AE247007970053518A /* Sequence+Unique.swift in Sources */,
 				3981273B233281050019D5E6 /* PresentModalAnimator.swift in Sources */,
 				3984BB9D2396684A00A775A7 /* UserDefaults+PrivacyAdditions.swift in Sources */,
 				398126F4233281050019D5E6 /* CGRect+Additions.swift in Sources */,
@@ -4863,6 +4878,7 @@
 			files = (
 				398127D82332B4C00019D5E6 /* digibyteUITests.swift in Sources */,
 				391BE383233372DF0079B56A /* VisualEffectView.swift in Sources */,
+				398625AB25D7F86B00A3BC93 /* UIViewEffectViewiOS14.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5257,7 +5273,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.digibytefoundation.DigiByte.DigiByte-Today-Extension";
@@ -5289,7 +5305,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.digibytefoundation.DigiByte.DigiByte-Today-Extension";
 				PRODUCT_NAME = "DigiByte Wallet";
@@ -5320,7 +5336,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.digibytefoundation.DigiByte.DigiByte-Today-Extension";
 				PRODUCT_NAME = "DigiByte Wallet";
@@ -5351,7 +5367,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.digibytefoundation.DigiByte.DigiByte-Today-Extension";
 				PRODUCT_NAME = "DigiByte Wallet";
@@ -5382,7 +5398,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.digibytefoundation.DigiByte.DigiByte-Today-Extension";
 				PRODUCT_NAME = "DigiByte Wallet";
@@ -5660,12 +5676,17 @@
 				CODE_SIGN_ENTITLEMENTS = DigiByte/digibyte.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2501;
+				CURRENT_PROJECT_VERSION = 2502;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = G49J8N7X2F;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/**",
 					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"$(BUILD_ARGS)",
 				);
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				INFOPLIST_FILE = DigiByte/Info.plist;
@@ -5674,8 +5695,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
-				OTHER_SWIFT_FLAGS = "$(inherited)";
+				MARKETING_VERSION = 2.0.1;
+				OTHER_SWIFT_FLAGS = "$(inherited) $(BUILD_ARGS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -5696,7 +5717,7 @@
 				CODE_SIGN_ENTITLEMENTS = DigiByte/digibyte.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2501;
+				CURRENT_PROJECT_VERSION = 2502;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = G49J8N7X2F;
 				ENABLE_TESTABILITY = NO;
@@ -5711,7 +5732,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5806,7 +5827,7 @@
 		75A2A8011DA5935F00A983D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CURRENT_PROJECT_VERSION = 2500;
 				DEVELOPMENT_TEAM = G49J8N7X2F;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -5817,7 +5838,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.MessagesExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -5828,7 +5849,7 @@
 		75A2A8021DA5935F00A983D8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CURRENT_PROJECT_VERSION = 2500;
 				DEVELOPMENT_TEAM = G49J8N7X2F;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -5839,7 +5860,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.MessagesExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -5888,7 +5909,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.NotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -5910,7 +5931,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.NotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -5932,7 +5953,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.NotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -5954,7 +5975,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.NotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -5976,7 +5997,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.NotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -5996,7 +6017,7 @@
 				IBSC_MODULE = digibyte_WatchKit_Extension;
 				INFOPLIST_FILE = "$(SRCROOT)/DigiByte WatchKit App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -6018,7 +6039,7 @@
 				IBSC_MODULE = digibyte_WatchKit_Extension;
 				INFOPLIST_FILE = "$(SRCROOT)/DigiByte WatchKit App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -6040,7 +6061,7 @@
 				IBSC_MODULE = digibyte_WatchKit_Extension;
 				INFOPLIST_FILE = "$(SRCROOT)/DigiByte WatchKit App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -6062,7 +6083,7 @@
 				IBSC_MODULE = digibyte_WatchKit_Extension;
 				INFOPLIST_FILE = "$(SRCROOT)/DigiByte WatchKit App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -6084,7 +6105,7 @@
 				IBSC_MODULE = digibyte_WatchKit_Extension;
 				INFOPLIST_FILE = "$(SRCROOT)/DigiByte WatchKit App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -6109,7 +6130,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -6135,7 +6156,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -6161,7 +6182,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -6187,7 +6208,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -6213,7 +6234,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -6356,7 +6377,7 @@
 				CODE_SIGN_ENTITLEMENTS = DigiByte/digibyte.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2501;
+				CURRENT_PROJECT_VERSION = 2502;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = G49J8N7X2F;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -6370,7 +6391,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6426,7 +6447,7 @@
 		CEA7E68E1F09AC6A001F8C27 /* Screenshots */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CURRENT_PROJECT_VERSION = 2500;
 				DEVELOPMENT_TEAM = G49J8N7X2F;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -6437,7 +6458,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.MessagesExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -6469,7 +6490,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"BITCOIN_TESTNET=1",
 				);
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				HEADER_SEARCH_PATHS = (
@@ -6652,11 +6672,15 @@
 				CODE_SIGN_ENTITLEMENTS = DigiByte/digibyte.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2501;
+				CURRENT_PROJECT_VERSION = 2502;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = G49J8N7X2F;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/**",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
 					"$(inherited)",
 				);
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -6666,7 +6690,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6722,7 +6746,7 @@
 		CEA7E6A11F0AAA84001F8C27 /* Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CURRENT_PROJECT_VERSION = 2500;
 				DEVELOPMENT_TEAM = G49J8N7X2F;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -6733,7 +6757,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.MessagesExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -6765,7 +6789,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"BITCOIN_TESTNET=1",
 				);
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				HEADER_SEARCH_PATHS = (
@@ -6942,7 +6965,7 @@
 				CODE_SIGN_ENTITLEMENTS = DigiByte/digibyte.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2501;
+				CURRENT_PROJECT_VERSION = 2502;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = G49J8N7X2F;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -6956,7 +6979,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7011,7 +7034,7 @@
 		CEE0EF5A1EBF8D7F0018DB36 /* Testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CURRENT_PROJECT_VERSION = 2500;
 				DEVELOPMENT_TEAM = G49J8N7X2F;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -7022,7 +7045,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.digibytefoundation.DigiByte.MessagesExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

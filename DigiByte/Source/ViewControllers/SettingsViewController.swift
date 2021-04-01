@@ -39,9 +39,28 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.tableHeaderView = headerView
         tableView.tableFooterView = UIView()
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = .singleLine
         tableView.backgroundColor = C.Colors.background
         addCustomTitle()
+        
+        
+        if #available(iOS 13.0, *) {
+            let standard = UINavigationBarAppearance()
+            standard.configureWithOpaqueBackground()
+
+            standard.backgroundColor = C.Colors.background
+            standard.titleTextAttributes = [.foregroundColor: UIColor.white]
+            
+            let button = UIBarButtonItemAppearance(style: .plain)
+            button.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
+            standard.buttonAppearance = button
+            
+            let done = UIBarButtonItemAppearance(style: .done)
+            done.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
+            standard.doneButtonAppearance = done
+            
+            navigationController?.navigationBar.standardAppearance = standard
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -75,7 +94,8 @@ class SettingsViewController : UITableViewController, CustomTitleView {
             cell.textLabel?.text = setting.title
             cell.textLabel?.font = .customBody(size: 16.0)
             cell.textLabel?.textColor = C.Colors.text
-            cell.backgroundColor = UIColor.white.withAlphaComponent(0.05)
+//            cell.contentView.backgroundColor = C.Colors.cellBackground
+            cell.backgroundColor = C.Colors.cellBackground
             
             if setting.switchViewMode {
                 let switchView = UISwitch()

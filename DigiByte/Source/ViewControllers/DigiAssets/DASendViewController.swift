@@ -67,6 +67,7 @@ class DAPinView: DGBModalWindow {
         descriptionLabel.text = textDescription
         descriptionLabel.numberOfLines = 0
         descriptionLabel.lineBreakMode = .byWordWrapping
+        descriptionLabel.textAlignment = .center
         
         pinView.fill(input.count)
         pinView.translatesAutoresizingMaskIntoConstraints = false
@@ -146,7 +147,7 @@ class DASendViewController: UIViewController {
     let receiverNameLabel = UILabel(font: UIFont.da.customMedium(size: 13), color: UIColor.da.secondaryGrey)
     let amountBox = DATextBox(showClearButton: true, mode: .numbersOnly)
     let amountButtonStackView = UIStackView()
-    let sendButton = DAButton(title: "Send Assets".uppercased(), backgroundColor: UIColor.da.darkSkyBlue, height: 40)
+    let sendButton = DAButton(title: S.Assets.sendAssets.uppercased(), backgroundColor: UIColor.da.darkSkyBlue, height: 40)
     
     private let store: BRStore
     private let wallet: BRWallet
@@ -165,7 +166,7 @@ class DASendViewController: UIViewController {
         UIPasteboard.general.string = assetSender.debug // YOSHI, remove before RELEASE
     }
     
-    init(store: BRStore, wallet: BRWallet, walletManager: WalletManager) {
+    init(store: BRStore, walletManager: WalletManager) {
         self.store = store
         self.wallet = wallet
         self.walletManager = walletManager
@@ -173,7 +174,7 @@ class DASendViewController: UIViewController {
         
         super.init(nibName: nil, bundle: nil)
         
-        tabBarItem = UITabBarItem(title: "Send", image: UIImage(named: "da-send")?.withRenderingMode(.alwaysTemplate), tag: 0)
+        tabBarItem = UITabBarItem(title: S.Assets.tabSend, image: UIImage(named: "da-send")?.withRenderingMode(.alwaysTemplate), tag: 0)
         
         view.addSubview(scrollView)
         scrollView.addSubview(stackView)
@@ -190,7 +191,7 @@ class DASendViewController: UIViewController {
         amountButtonStackView.distribution = .fill
         amountButtonStackView.axis = .horizontal
         
-        header.text = "Send Assets"
+        header.text = S.Assets.sendAssets
         header.textAlignment = .left
         
         totalBalanceLabel.text = " "
@@ -213,7 +214,7 @@ class DASendViewController: UIViewController {
             self?.setBalance(multiplier: 0.5)
             self?.toggleSendButton()
         }))
-        amountButtonStackView.addArrangedSubview(AmountButton(title: "MAX", callback: { [weak self] in
+        amountButtonStackView.addArrangedSubview(AmountButton(title: S.Send.max, callback: { [weak self] in
             self?.setBalance(multiplier: 1.0)
             self?.toggleSendButton()
         }))
@@ -238,8 +239,8 @@ class DASendViewController: UIViewController {
         
         stackView.addArrangedSubview(horizontalPadding(for: sendButton, 40))
         
-        receiverAddressBox.placeholder = "Receiver Address"
-        amountBox.placeholder = "Amount"
+        receiverAddressBox.placeholder = S.Receive.receiveAddress
+        amountBox.placeholder = S.TransactionDetails.amountHeader
         
         addConstraints()
         addEvents()
@@ -265,6 +266,7 @@ class DASendViewController: UIViewController {
             // Show modal window (gallery, image, scanner)
             let modalWindow = DGBModalMediaOptions { (address) in
                 self?.receiverAddressBox.textBox.text = address
+                self?.toggleSendButton()
                 self?.indexContacts()
                 self?.updateReceiverName(address)
             }
@@ -319,7 +321,9 @@ class DASendViewController: UIViewController {
         assetSelector.callback = { [weak self] asset in
             self?.selectedModel = asset
         }
-        self.present(assetSelector, animated: true, completion: nil)
+        self.present(assetSelector, animated: true, completion: {
+            assetSelector.tableView.reloadData()
+        })
     }
     
     private func setBalance(multiplier: Double = 0.0, constant: Int = 0) {
@@ -372,7 +376,7 @@ class DASendViewController: UIViewController {
     }
     
     private func presentVerifyPin(_ str: String, callback: @escaping VerifyPinCallback) {
-        let wnd = DAPinView(title: "Enter your PIN", description: str, callback: callback)
+        let wnd = DAPinView(title: S.VerifyPin.authorize, description: str, callback: callback)
         present(wnd, animated: true, completion: nil)
     }
     
@@ -400,12 +404,12 @@ class DASendViewController: UIViewController {
             guard let selectedModel = self?.selectedModel else { return }
             
             guard let balance = AssetHelper.allBalances[selectedModel.assetId] else {
-                self?.showError(with: "Asset not available")
+                self?.showError(with: S.Assets.AssetNotAvailable)
                 return
             }
             
             guard let address = self?.receiverAddressBox.textBox.text, address != "", address.isValidAddress else {
-                self?.showError(with: "Invalid address")
+                self?.showError(with: S.Send.invalidAddressTitle)
                 return
             }
             
@@ -413,19 +417,19 @@ class DASendViewController: UIViewController {
                 let amountStr = self?.amountBox.textBox.text,
                 amountStr != "",
                 let amount = Int(amountStr) else {
-                    self?.showError(with: "No valid amount entered")
+                    self?.showError(with: S.Send.noAmount)
                     return
             }
                 
             if balance < Int(amount) {
-                self?.showError(with: "Not enough assets")
+                self?.showError(with: S.Assets.NotEnoughAssets)
                 return
             }
         
             guard
                 let assetSender = self?.assetSender,
                 assetSender.createTransaction(assetModel: selectedModel, amount: amount, to: address) else {
-                self?.showError(with: "Could not create transaction")
+                    self?.showError(with: "\(S.Send.createTransactionError) (\(self!.assetSender.errorCode ?? -1))")
                 return;
             }
             
@@ -449,14 +453,18 @@ class DASendViewController: UIViewController {
                 }, completion: { [weak self] result in
                     switch result {
                     case .success:
-                        self?.showSuccess(with: "Asset(s) sent!")
+                        if let txid = assetSender.transaction?.txHash.description {
+                            AssetHelper.createTemporaryAssetModel(for: txid, mode: .send, assetModel: selectedModel, amount: amount, to: address)
+                        }
+                        
+                        self?.showSuccess(with: S.Assets.AssetsSent)
                         self?.dismiss(animated: true)
                         
-                    case .creationError(let message):
-                        self?.showError(with: "Transaction could not be created: \(message)")
+                    case .creationError(let message, let code):
+                        self?.showError(with: String.init(format: S.Assets.couldNotBeCreated, message, code ?? -1))
                         
                     case .publishFailure(let error):
-                        self?.showError(with: "Transaction could not be broadcasted: \(error)")
+                        self?.showError(with: String.init(format: S.Assets.couldNotBeBroadcasted, error.localizedDescription))
                     }
             })
         }

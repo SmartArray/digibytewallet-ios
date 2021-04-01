@@ -1,5 +1,5 @@
 module libbz2 [system] {
-    header "/Applications/Xcode-beta.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/bzlib.h"
+    header "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/bzlib.h"
     link "bz2"
     export *
 }

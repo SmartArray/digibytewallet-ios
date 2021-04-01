@@ -162,6 +162,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
         automaticBiometricsSwitch.valueChanged = { [unowned self] in
             UserDefaults.automaticBiometricsOnStartup = self.automaticBiometricsSwitch.isOn
         }
+    
     }
 
     private func addFaqButton() {

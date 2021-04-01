@@ -46,7 +46,7 @@ private class DigiExplorerEndpoint {
 //        "https://digiexplorer2.info", /* debug purposes (invalid host) */
         "https://digiexplorer.info",
         "https://dgb1.trezor.io",
-	"https://digibyteblockexplorer.com"
+        "https://digibyteblockexplorer.com"
     ]
     
     // Index of hosts array.
@@ -95,7 +95,11 @@ private class DigiExplorerEndpoint {
         print(url)
         
         // Create the session task
-        let task = URLSession.shared.dataTask(with: url, completionHandler: { (data, url, err) in
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.timeoutIntervalForRequest = 10.0
+        
+        let session = URLSession(configuration: sessionConfig)
+        let task = session.dataTask(with: url, completionHandler: { (data, url, err) in
             var shouldTryOtherURL: Bool = false
             
             guard err == nil else {

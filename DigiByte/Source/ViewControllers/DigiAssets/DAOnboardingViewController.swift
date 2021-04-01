@@ -88,12 +88,12 @@ class DAOnboardingViewController: UIViewController {
     var nextVC: UIViewController!
     
     // MARK: Private properties
-    private let header = ModalHeaderView(title: "Welcome to DigiAssets", style: ModalHeaderViewStyle.light)
+    private let header = ModalHeaderView(title: S.AssetsWelcome.welcomeTitle, style: ModalHeaderViewStyle.light)
     
     private let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
-    private let createViewController = DAOnboardingPage(image: UIImage(named: "da-onboarding-create"), title: "Create.", description: "You can create DigiAssets right from within the DigiAssets webapp. Turn stuff you love into DigiAssets.")
-    private let sendViewController = DAOnboardingPage(image: UIImage(named: "da-onboarding-send"), title: "Send.", description: "You can send DigiAssets to other people through transfer of ownership, directly in the DigiAssets app.")
-    private let receiveViewController = DAOnboardingPage(image: UIImage(named: "da-onboarding-receive"), title: "Receive.", description: "You can receive DigiAssets from other people through transfer of ownership, directly in the DigiAssets app.")
+    private let createViewController = DAOnboardingPage(image: UIImage(named: "da-onboarding-create"), title: S.AssetsWelcome.createHeading, description: S.AssetsWelcome.createText)
+    private let sendViewController = DAOnboardingPage(image: UIImage(named: "da-onboarding-send"), title: S.AssetsWelcome.sendHeading, description: S.AssetsWelcome.sendText)
+    private let receiveViewController = DAOnboardingPage(image: UIImage(named: "da-onboarding-receive"), title: S.AssetsWelcome.receiveHeading, description: S.AssetsWelcome.receiveText)
     
     private let actionButtonBackgroundCircle = UIButton(frame: CGRect(x: 0, y: 0, width: DAOnboardingViewController.ActionButtonCircleSize, height: DAOnboardingViewController.ActionButtonCircleSize))
     private let actionButton = UIImageView(frame: CGRect(x: 0, y: 0, width: DAOnboardingViewController.ActionButtonCircleSize / 2, height: DAOnboardingViewController.ActionButtonCircleSize / 2))

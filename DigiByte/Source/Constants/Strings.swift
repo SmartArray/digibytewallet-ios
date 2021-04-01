@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum S {
+enum S {    
     enum Symbols {
         static let bits = "\u{018A}"
 		static let btc = "\u{018A}"
@@ -46,10 +46,11 @@ enum S {
         static let confirmAssetsResolve = NSLocalizedString("Assets.confirmAssetsResolve", value: "Resolve Asset(s)", comment: "Resolve button caption")
         static let skipAssetsResolve = NSLocalizedString("Assets.skipAssetsResolve", value: "Skip", comment: "Skip button caption")
         static let cancelAssetsResolve = NSLocalizedString("Assets.cancelAssetsResolve", value: "Cancel", comment: "Cancel button caption")
+        static let continueWithoutSync = NSLocalizedString("Assets.continueWithoutSync", value: "Skip Sync", comment: "Skip button caption")
         
-        static let totalSupply = NSLocalizedString("Assets.totalSupply", value: "Total Supply", comment: "")
-        static let numberOfHolders = NSLocalizedString("Assets.numberOfHolders", value: "Number of Holders", comment: "")
-        static let lockStatus = NSLocalizedString("Assets.lockStatus", value: "Lock Status", comment: "")
+        static let totalSupply = NSLocalizedString("Assets.totalSupply", value: "Total Supply", comment: "Total supply of asset")
+        static let numberOfHolders = NSLocalizedString("Assets.numberOfHolders", value: "Number of Holders", comment: "Number of total holders of an asset")
+        static let lockStatus = NSLocalizedString("Assets.lockStatus", value: "Lock Status", comment: "lock status of an asset")
         
         static let issuer = NSLocalizedString("Assets.issuer", value: "Issuer", comment: "Issuer key")
         static let assetID = NSLocalizedString("Assets.assetID", value: "Asset ID", comment: "AssetID key")
@@ -61,6 +62,88 @@ enum S {
         static let unknown = NSLocalizedString("Assets.unknown", value: "Unknown", comment: "Shown if a value is unknown (N/A)")
         
         static let totalBalance = NSLocalizedString("Assets.totalBalance", value: "Total balance", comment: "Total Balance: <BALANCE>")
+        
+        static let tapToShow = NSLocalizedString("Assets.tapToShow", value: "Tap to show", comment: "Tap to show button")
+        static let tapToHide = NSLocalizedString("Assets.tapToHide", value: "Tap to hide", comment: "Tap to hide button")
+        
+        static let assetIdKey = NSLocalizedString("Assets.assetIdKey", value: "Asset ID", comment: "Asset ID: XXXXXX")
+        static let balanceKey = NSLocalizedString("Assets.balanceKey", value: "Total Balance", comment: "Total Balance: 1000")
+        static let issuerKey = NSLocalizedString("Assets.issuerKey", value: "Issuer", comment: "Issuer: CreateDigiAssets.com")
+        static let assetInfoKey = NSLocalizedString("Assets.assetInfoKey", value: "Asset Info", comment: "Asset Info: YYYY")
+        static let descriptionKey = NSLocalizedString("Assets.descriptionKey", value: "Description", comment: "Description: ZZZZ")
+        
+        static let getStarted = NSLocalizedString("Assets.getStarted", value: "Get started", comment: "Button title for GET STARTED")
+        
+        static let createNewAsset = NSLocalizedString("Assets.createNewAsset", value: "Create new Asset", comment: "Button title for create new asset")
+        static let receiveAssets = NSLocalizedString("Assets.receiveAssets", value: "Receive Assets", comment: "Heading for Receive assets")
+        static let createAssets = NSLocalizedString("Assets.createAssets", value: "Create Assets", comment: "Heading for create new assets")
+        static let burnAssets = NSLocalizedString("Assets.burnAssets", value: "Burn Assets", comment: "Heading for burn assets")
+        static let sendAssets = NSLocalizedString("Assets.sendAssets", value: "Send Assets", comment: "Button title for send assets")
+        
+        static let tabOverview = NSLocalizedString("Assets.tabOverview", value: "Assets", comment: "Tab title")
+        static let tabCreate = NSLocalizedString("Assets.tabCreate", value: "Create", comment: "Tab title")
+        static let tabSend = NSLocalizedString("Assets.tabSend", value: "Send", comment: "Tab title")
+        static let tabReceive = NSLocalizedString("Assets.tabReceive", value: "Receive", comment: "Tab title")
+        static let tabBurn = NSLocalizedString("Assets.tabBurn", value: "Burn", comment: "Tab title")
+        
+        static let nothingFoundHere = NSLocalizedString("Assets.nothingFoundHere", value: "Nothing found here", comment: "Shown, when no assets are available")
+        
+        static let selectAnAsset = NSLocalizedString("Assets.selectAnAsset", value: "Select an Asset", comment: "Asset selector placeholder text")
+        
+        static let dangerTitle = NSLocalizedString("Assets.dangerTitle", value: "DANGER ZONE", comment: "Danger Title")
+        static let dangerText = NSLocalizedString("Assets.dangerText", value: "Burning assets destroys them irreversibly. You can never, ever get them back.", comment: "Danger description")
+        
+        static let AssetNotAvailable = NSLocalizedString("Assets.AssetNotAvailable", value: "Asset not available", comment: "Asset not available")
+        
+        static let NotEnoughAssets = NSLocalizedString("Assets.NotEnoughAssets", value: "Not enough assets", comment: "Displayed as a message when not enough assets are available")
+        
+        static let NoAssetData = NSLocalizedString("Assets.NoAssetData", value: "No asset data available", comment: "No asset data error message")
+        
+        static let AssetsBurned = NSLocalizedString("Assets.AssetsBurned", value: "Asset(s) burned!", comment: "Displayed as a message when assets were burned")
+        static let AssetsSent = NSLocalizedString("Assets.AssetsSent", value: "Asset(s) sent!", comment: "Displayed as a message when assets were sent")
+        
+        static let couldNotBeBroadcasted = NSLocalizedString("Assets.couldNotBeBroadcasted", value: "Transaction could not be broadcasted: %1$@", comment: "Transaction could not be broadcasted: <MESSAGE>")
+        
+        static let couldNotBeCreated = NSLocalizedString("Assets.couldNotBeCreated", value: "Transaction could not be created: %1$@ (code: %2$@)", comment: "Transaction could not be created: <MESSAGE> (code: 123)")
+        
+        
+        static let totalUnique = NSLocalizedString("Assets.totalUnique", value: "Total number of unique Assets: %1$@", comment: "Total unique: 1234")
+        
+        enum Context {
+            static let info = NSLocalizedString("Assets.Context.info", value: "Info", comment: "Context menu button caption")
+            static let send = NSLocalizedString("Assets.Context.send", value: "Send", comment: "Context menu button caption")
+            static let receive = NSLocalizedString("Assets.Context.receive", value: "Receive", comment: "Context menu button caption")
+            static let burn = NSLocalizedString("Assets.Context.burn", value: "Burn", comment: "Context menu button caption")
+        }
+        
+        enum Send {
+            static let importAddress = NSLocalizedString("Assets.Send.importAddress", value: "Import Address", comment: "Import Address Option: Address Book");
+
+            static let addressBook = NSLocalizedString("Assets.Send.addressBook", value: "Address Book", comment: "Import Address Option: Import Address from Clipboard");
+
+            static let pasteFromClipboard = NSLocalizedString("Assets.Send.pasteFromClipboard", value: "Paste from Clipboard", comment: "Import Address Option: Scan QR");
+
+            static let scanQR = NSLocalizedString("Assets.Send.scanQR", value: "Scan QR Code", comment: "Import Address Option: Browse Gallery");
+
+            static let browseGallery = NSLocalizedString("Assets.Send.browseGallery", value: "Browse Gallery", comment: "Import Address Description: Address Book");
+
+            static let addressBookDescription = NSLocalizedString("Assets.Send.addressBookDescription", value: "Use an Address of your Address Book", comment: "Import Address Description: QR Scanner");
+
+            static let scanQRDescription = NSLocalizedString("Assets.Send.scanQRDescription", value: "Use your Camera to scan a QR Code containing an Address", comment: "Import Address Description: Gallery");
+
+            static let browseGalleryDescription = NSLocalizedString("Assets.Send.browseGalleryDescription", value: "Import an Image from Gallery", comment: "Import Address Description: Gallery.");
+        }
+        
+        static let yourAssets = NSLocalizedString("Assets.yourAssets", value: "Assets you own", comment: "Assets you own (heading)")
+        
+        static let protocolDisabled = NSLocalizedString("Assets.protocolDisabled", value: "DigiAssets Protocol Disabled", comment: "Message heading")
+        static let protocolDisabledDescription = NSLocalizedString("Assets.protocolDisabledDescription", value: "DigiAssets Protocol Disabled", comment: "Message heading")
+        
+        static let select = NSLocalizedString("Assets.select", value: "Select asset ...", comment: "Select an asset (default dropdown)")
+        
+        static let tx = NSLocalizedString("Assets.tx", value: "Asset Transaction", comment: "(Underlying) Asset Transaction")
+        static let rawTx = NSLocalizedString("Assets.rawTx", value: "View Raw Transaction", comment: "View RAW Asset Transaction")
+        
     }
 
     enum Button {
@@ -99,6 +182,7 @@ enum S {
         static let name = NSLocalizedString("AddressBook.name", value: "Name", comment: "Name of contact")
         static let searchPlaceholder = NSLocalizedString("AddressBook.searchPlaceholder", value:"Search contacts", comment: "Placeholder for searchbar")
         static let favorites = NSLocalizedString("AddressBook.favorites", value:"Favorites", comment: "Favorites header title")
+        static let favorite = NSLocalizedString("AddressBook.favorite", value:"Favorite", comment: "Favorite Switch Title (as favorite)-option")
         
         static let addContact = NSLocalizedString("AddressBook.addContact", value:"Add a new contact", comment: "Header title in address book")
         
@@ -113,6 +197,20 @@ enum S {
         static let deleteContactHeader = NSLocalizedString("AddressBook.deleteContactHeader", value:"Delete contact", comment: "header in confirm dialog to delete contact")
         
         static let deleteContact = NSLocalizedString("AddressBook.deleteContact", value:"Do you really want to delete this contact?", comment: "description in confirm dialog to delete contact")
+    }
+    
+    enum Welcome {
+        static let page1Title = NSLocalizedString("Welcome.page1title", value:"Welcome to the DigiByte wallet.", comment: "Title for first welcome screen")
+        static let page2Title = NSLocalizedString("Welcome.page2title", value:"Send", comment: "Title for second welcome screen")
+        static let page3Title = NSLocalizedString("Welcome.page3title", value:"Receive", comment: "Title for third welcome screen")
+        static let page4Title = NSLocalizedString("Welcome.page4title", value:"Safely store", comment: "Title for fourth welcome screen")
+        static let page5Title = NSLocalizedString("Welcome.page5title", value:"Login using Digi-ID", comment: "Title for fifth welcome screen")
+        
+        static let page1Text = NSLocalizedString("Welcome.page1text", value:"Safely store and use your DigiByte currency.", comment: "Text for first welcome screen")
+        static let page2Text = NSLocalizedString("Welcome.page2text", value:"Effortlessly and instantly send your DigiByte globally.", comment: "Text for second welcome screen")
+        static let page3Text = NSLocalizedString("Welcome.page3text", value:"Create payment requests and instantly receive money from all over the world.", comment: "Text for third welcome Text")
+        static let page4Text = NSLocalizedString("Welcome.page4text", value:"Protect your DigiByte with a range of advanced security features.", comment: "Text for fourth welcome screen")
+        static let page5Text = NSLocalizedString("Welcome.page5text", value:"Utilize the might of blockchain security with Digi-ID Open Auth.", comment: "Text for fifth welcome screen")
     }
 
     enum Send {
@@ -148,6 +246,8 @@ enum S {
         static let insufficientFunds = NSLocalizedString("Send.insufficientFunds", value: "Insufficient Funds", comment: "Insufficient funds error")
         
         static let max = NSLocalizedString("Send.max", value: "Max", comment: "maximum amount")
+        
+        static let useDandelion = NSLocalizedString("Send.useDandelion", value: "Use the Dandelion Protocol for enhanced privacy", comment: "option to use Dandelion Protocol")
     }
 
     enum Receive {
@@ -157,6 +257,14 @@ enum S {
         static let copied = NSLocalizedString("Receive.copied", value:"Copied to clipboard.", comment: "Address copied message.")
         static let share = NSLocalizedString("Receive.share", value:"Share", comment: "Share button label")
         static let request = NSLocalizedString("Receive.request", value:"Request an Amount", comment: "Request button label")
+        
+        static let receiveAmountTo = NSLocalizedString("Receive.receiveAmountTo", value:"Receive %1$@ to %2$@", comment: "Receive 10 BTC to <Address>")
+        static let receiveTo = NSLocalizedString("Receive.receiveTo", value:"Receive to %1$@", comment: "Receive to <Address>")
+        
+        static let showLegacyAddress = NSLocalizedString("Receive.showLegacyAddress", value: "Show a Legacy Address instead", comment: "Clickable button")
+        static let showSegwitAddress = NSLocalizedString("Receive.showSegwitAddress", value: "Show a Segwit Address instead", comment: "Clickable button")
+        
+        static let receiveAddress = NSLocalizedString("Receive.receiveAddress", value: "Receive Address", comment: "Receive Address Box placeholder")
     }
 
     enum Account {
@@ -205,6 +313,7 @@ enum S {
         static let receivedStatus = NSLocalizedString("Transaction.receivedStatus", value: "In progress: %1$@", comment: "Receive status text: 'In progress: 20%'")
         static let sendingStatus = NSLocalizedString("Transaction.sendingStatus", value: "In progress: %1$@", comment: "Send status text: 'In progress: 20%'")
         static let available = NSLocalizedString("Transaction.available", value: "Available to Spend", comment: "Availability status text")
+        static let signTimeout = NSLocalizedString("Transaction.signTimeout", value: "Did not sign tx within timeout", comment: "Message that appears, when the sign timeout was triggered")
     }
 
     enum TransactionDetails {
@@ -334,7 +443,12 @@ enum S {
     enum TouchIdSpendingLimit {
         static let title = NSLocalizedString("TouchIdSpendingLimit.title", value:"Touch ID Spending Limit", comment: "Touch Id spending limit screen title")
         static let body = NSLocalizedString("TouchIdSpendingLimit.body", value:"You will be asked to enter your 6-digit PIN to send any transaction over your spending limit, and every 48 hours since the last time you entered your 6-digit PIN.", comment: "Touch ID spending limit screen body")
-        static let requirePasscode = NSLocalizedString("TouchIdSpendingLimit", value: "Always require passcode", comment: "Always require passcode option")
+        static let requirePasscode = NSLocalizedString("TouchIdSpendingLimit.requirePasscode", value: "Always require passcode", comment: "Always require passcode option")
+        
+        static let custom = NSLocalizedString("TouchIdSpendingLimit.custom", value: "Custom", comment: "custom amount limit (category)")
+        static let customAmount = NSLocalizedString("TouchIdSpendingLimit.customAmount", value: "Custom amount", comment: "custom amount limit (title)")
+        static let customAmountDescription = NSLocalizedString("TouchIdSpendingLimit.customAmountDescription", value: "Enter a custom amount", comment: "Description for custom amount")
+        
     }
     
     enum FaceIdSpendingLimit {
@@ -364,6 +478,38 @@ enum S {
         static let maxSendEnabled = NSLocalizedString("Settings.maxSendEnabled", value:"Send Max Button visible", comment: "send max button visible or not")
         
         static let excludeLogoInQR = NSLocalizedString("Settings.excludeLogoInQR", value:"Hide DigiByte Logo in QR codes", comment: "do not place a digibyte logo into qr codes")
+        
+        static let showRawTransactions = NSLocalizedString("Settings.showRawTransactions", value:"Disable DigiAssets", comment: "Do not show any DigiAsset Contents")
+        
+        static let resolveAssetsWithoutPrompt = NSLocalizedString("Settings.resolveAssetsWithoutPrompt", value: "Resolve assets without prompt", comment: "Resolve Assets without a prompt")
+        
+        static let clearAssetCache = NSLocalizedString("Settings.clearAssetCache", value: "Clear Asset Cache", comment: "Clear Asset Cache")
+        
+        static let clearImageCache = NSLocalizedString("Settings.clearImageCache", value: "Clear Image Cache", comment: "Clear Assets Image cache")
+        
+        static let cacheCleared = NSLocalizedString("Settings.cacheCleared", value: "Cache cleared", comment: "Message that appears when a cache was cleared")
+        
+        static let nodes = NSLocalizedString("Settings.nodes", value: "DigiByte Nodes", comment: "DigiByte Nodes (Network term)")
+        static let useDigiIDLegacy = NSLocalizedString("Settings.useDigiIDLegacy", value: "Use Digi-ID Legacy", comment: "Settings item")
+        static let digiIdLegacyWarning = NSLocalizedString("Settings.digiIdLegacyWarning", value: "Adding exceptions is not recommended. Digi-ID Legacy will be removed a future release", comment: "Message that appears when DigiID Legacy is being opened")
+        static let digiIdPreview = NSLocalizedString("Settings.digiIdPreview", value: "#%1$@ site(s)", comment: "DigiID Legacy Preview Text (how many websites were added as an exception)")
+        
+        static let digiIdLegacyTitle = NSLocalizedString("Settings.digiIdLegacyTitle", value: "Digi-ID Legacy", comment: "DigiID Legacy Title")
+        static let digiIdLegacyDescription = NSLocalizedString("Settings.digiIdLegacyDescription", value: "Digi-ID Legacy refers to an outdated authentication variant of Digi-ID, which was not compatible with DigiByte Android. It is not recommended to use Digi-ID Legacy for new logins.", comment: "DigiID Legacy Description")
+        
+        static let addException = NSLocalizedString("Settings.addException", value: "Add an exception", comment: "DigiID Legacy: Add Exception (button)")
+    }
+    
+    enum AssetsWelcome {
+        static let welcomeTitle = NSLocalizedString("AssetsWelcome.welcomeTitle", value: "Welcome to DigiAssets", comment: "Welcome title")
+        static let createHeading = NSLocalizedString("AssetsWelcome.createHeading", value: "Create.", comment: "Create Heading")
+        static let sendHeading = NSLocalizedString("AssetsWelcome.sendHeading", value: "Send.", comment: "Send Heading")
+        static let receiveHeading = NSLocalizedString("AssetsWelcome.receiveHeading", value: "Receive.", comment: "Receive Heading")
+        
+        static let createText = NSLocalizedString("AssetsWelcome.createText", value: "You can create DigiAssets right from within the DigiAssets webapp. Turn stuff you love into DigiAssets.", comment: "Create Text")
+        static let sendText = NSLocalizedString("AssetsWelcome.sendText", value: "You can send DigiAssets to other people through transfer of ownership, directly in the DigiAssets app.", comment: "Send Text")
+        static let receiveText = NSLocalizedString("AssetsWelcome.receiveText", value: "You can receive DigiAssets from other people through transfer of ownership, directly in the DigiAssets app.", comment: "Receive Text")
+        
     }
 
     enum About {
@@ -373,6 +519,13 @@ enum S {
         static let reddit = NSLocalizedString("About.reddit", value:"Reddit", comment: "About screen reddit label")
         static let privacy = NSLocalizedString("About.privacy", value:"Privacy Policy", comment: "Privay Policy button label")
         static let footer = NSLocalizedString("About.footer", value:"Made by the global DigiByte team. Version %1$@", comment: "About screen footer")
+        static let introduction = NSLocalizedString("About.introduction", value: "This app was built by DigiByte & Blockchain enthusiasts, unpaid volunteers who devoted their time and skills to a project they believe in.", comment: "Introduction in About Screen")
+        
+        static let version = NSLocalizedString("Abput.version", value: "Version: #%1$@", comment: "Version: 2.0.0")
+        static let development = NSLocalizedString("Abput.development", value: "Development", comment: "Development Heading in About Section")
+        static let ui = NSLocalizedString("About.ui", value: "UI", comment: "UI Heading in About Section")
+        static let specialThanks = NSLocalizedString("About.specialThanks", value: "Special Thanks", comment: "Special Thanks Heading in About Section")
+        static let translations = NSLocalizedString("About.translations", value: "Translations", comment: "Translations Heading in About Section")
     }
 
     enum PushNotifications {
@@ -407,6 +560,11 @@ enum S {
         static let alertTitle = NSLocalizedString("ReScan.alertTitle", value:"Sync with Blockchain?", comment: "Alert message title")
         static let alertMessage = NSLocalizedString("ReScan.alertMessage", value:"You will not be able to send money while syncing.", comment: "Alert message body")
         static let alertAction = NSLocalizedString("ReScan.alertAction", value:"Sync", comment: "Alert action button label")
+        static let fastSync = NSLocalizedString("ReScan.fastSync", value: "Fast Sync", comment: "Heading of modal alert")
+        static let fastSyncDescription = NSLocalizedString("ReScan.fastSyncDescription", value: "In order to optimize the sync, this wallet can communicate with a blockexplorer. Note that this will leak some public wallet addresses in order to speed up the sync.", comment: "Privacy Warning of fast sync")
+        static let fastReSync = NSLocalizedString("ReScan.fastReSync", value: "Fast Resync", comment: "Heading of modal alert")
+        static let regularSync = NSLocalizedString("ReScan.regularSync", value: "Regular resync (slow)", comment: "Regular Sync description")
+        
     }
 
     enum ShareData {

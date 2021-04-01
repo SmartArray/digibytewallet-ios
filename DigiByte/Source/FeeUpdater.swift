@@ -31,8 +31,9 @@ class FeeUpdater : Trackable {
     }
 
     func refresh(completion: @escaping () -> Void) {
+        return;
         walletManager.apiClient?.feePerKb { newFees, error in
-            guard error == nil else { print("feePerKb error: \(String(describing: error))"); completion(); return }
+            guard error == nil else { print("feePerKb error: \(String(describing: error!))"); completion(); return }
             guard newFees.regular < self.maxFeePerKB && newFees.economy > self.minFeePerKB else {
                 //self.saveEvent("wallet.didUseDefaultFeePerKB")
                 return

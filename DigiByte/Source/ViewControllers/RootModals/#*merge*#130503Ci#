@@ -90,7 +90,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
                 crShare.layer.opacity = 1
                 descriptionLabel.alpha = 0
                 let amountStr: CGFloat = CGFloat(amount.rawValue) / 100000000.0
-                requestString.text = "Receive \(amountStr) \(C.btcCurrencyCode) \(S.Confirmation.to.lowercased())\n\(address)"
+                requestString.text = String(format: S.Receive.receiveAmountTo, "\(amountStr) \(C.btcCurrencyCode)", address)
                 setQrCode()
             } else {
                 addressButton.isUserInteractionEnabled = true
@@ -99,7 +99,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
                 requestString.layer.opacity = 1.0
                 descriptionLabel.alpha = 1
                 share.isUserInteractionEnabled = true
-                requestString.text = "Receive to\n\(address)" // ToDo: Export language
+                requestString.text = String(format: S.Receive.receiveTo, address)
                 setReceiveAddress()
             }
         }

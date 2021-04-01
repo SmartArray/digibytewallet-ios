@@ -65,7 +65,7 @@ class DABurnViewController: UIViewController {
     let assetDropdown = DADropDown()
     let totalBalanceLabel = UILabel(font: UIFont.da.customMedium(size: 13), color: UIColor.da.secondaryGrey)
     let amountBox = DATextBox(showClearButton: true, mode: .numbersOnly)
-    let burnButton = DAButton(title: "Burn Assets".uppercased(), backgroundColor: UIColor.da.burnColor, height: 40)
+    let burnButton = DAButton(title: S.Assets.burnAssets.uppercased(), backgroundColor: UIColor.da.burnColor, height: 40)
     
     var selectedModel: AssetModel? = nil {
         didSet {
@@ -73,14 +73,14 @@ class DABurnViewController: UIViewController {
         }
     }
     
-    init(store: BRStore, wallet: BRWallet, walletManager: WalletManager) {
+    init(store: BRStore, walletManager: WalletManager) {
         self.store = store
         self.wallet = wallet
         self.walletManager = walletManager
         self.assetSender = AssetSender(walletManager: walletManager, store: store)
         super.init(nibName: nil, bundle: nil)
         
-        tabBarItem = UITabBarItem(title: "Burn", image: UIImage(named: "da-burn")?.withRenderingMode(.alwaysTemplate), tag: 0)
+        tabBarItem = UITabBarItem(title: S.Assets.tabBurn, image: UIImage(named: "da-burn")?.withRenderingMode(.alwaysTemplate), tag: 0)
         
         view.addSubview(scrollView)
         scrollView.addSubview(stackView)
@@ -92,7 +92,7 @@ class DABurnViewController: UIViewController {
         stackView.distribution = .fill
         stackView.axis = .vertical
         
-        header.text = "Burn Assets"
+        header.text = S.Assets.burnAssets
         header.textAlignment = .left
         
         totalBalanceLabel.text = " "
@@ -113,11 +113,11 @@ class DABurnViewController: UIViewController {
         
         dangerLabel.textAlignment = .center
         dangerLabel.lineBreakMode = .byWordWrapping
-        dangerLabel.text = "DANGER ZONE"
+        dangerLabel.text = S.Assets.dangerTitle
         
         dangerDescriptionLabel.textAlignment = .center
         dangerDescriptionLabel.lineBreakMode = .byWordWrapping
-        dangerDescriptionLabel.text = "Burning assets destroys them irreversibly. You can never, ever get them back."
+        dangerDescriptionLabel.text = S.Assets.dangerText
         dangerDescriptionLabel.numberOfLines = 0
         
         dangerImageView.constrain([
@@ -157,7 +157,7 @@ class DABurnViewController: UIViewController {
         
         stackView.addArrangedSubview(horizontalPadding(for: burnButton, 40))
         
-        amountBox.placeholder = "Amount"
+        amountBox.placeholder = S.Send.amountLabel
         amountBox.textBox.text = ""
         
         addConstraints()
@@ -200,7 +200,9 @@ class DABurnViewController: UIViewController {
         assetSelector.callback = { [weak self] asset in
             self?.selectedModel = asset
         }
-        self.present(assetSelector, animated: true, completion: nil)
+        self.present(assetSelector, animated: true, completion: {
+            assetSelector.tableView.reloadData()
+        })
     }
     
     private func modelSelected() {
@@ -220,7 +222,7 @@ class DABurnViewController: UIViewController {
     }
     
     private func presentVerifyPin(_ str: String, callback: @escaping VerifyPinCallback) {
-        let wnd = DAPinView(title: "Enter your PIN", description: str, callback: callback)
+        let wnd = DAPinView(title: S.VerifyPin.authorize, description: str, callback: callback)
         present(wnd, animated: true, completion: nil)
     }
     
@@ -242,7 +244,7 @@ class DABurnViewController: UIViewController {
             guard let selectedModel = self?.selectedModel else { return }
             
             guard let balance = AssetHelper.allBalances[selectedModel.assetId] else {
-                self?.showError(with: "Asset not available")
+                self?.showError(with: S.Assets.AssetNotAvailable)
                 return
             }
             
@@ -250,12 +252,12 @@ class DABurnViewController: UIViewController {
                 let amountStr = self?.amountBox.textBox.text,
                 amountStr != "",
                 let amount = Int(amountStr) else {
-                    self?.showError(with: "No valid amount entered")
+                    self?.showError(with: S.Send.noAmount)
                     return
             }
                 
             if balance < Int(amount) {
-                self?.showError(with: "Not enough assets")
+                self?.showError(with: S.Assets.NotEnoughAssets)
                 return
             }
             
@@ -265,7 +267,7 @@ class DABurnViewController: UIViewController {
             guard
                 let assetSender = self?.assetSender,
                 assetSender.createBurnTransaction(assetModel: selectedModel, amount: amount) else {
-                self?.showError(with: "Could not create transaction")
+                    self?.showError(with: "\(S.Send.createTransactionError) (\(self!.assetSender.errorCode ?? -1))")
                 return;
             }
             
@@ -286,17 +288,22 @@ class DABurnViewController: UIViewController {
                 }, completion: { [weak self] result in
                     switch result {
                     case .success:
-                        self?.showSuccess(with: "Asset(s) burned!")
+                        if let txid = assetSender.transaction?.txHash.description {
+                            AssetHelper.createTemporaryAssetModel(for: txid, mode: .send, assetModel: selectedModel, amount: amount, to: "")
+                        }
+                        
+                        self?.showSuccess(with: S.Assets.AssetsBurned)
                         self?.dismiss(animated: true)
                         
-                    case .creationError(let message):
-                        self?.showError(with: "Transaction could not be created: \(message)")
+                    case .creationError(let message, let code):
+                        self?.showError(with: String.init(format: S.Assets.couldNotBeCreated, message, code ?? -1))
                         
                     case .publishFailure(let error):
-                        self?.showError(with: "Transaction could not be broadcasted: \(error)")
+                        self?.showError(with: String.init(format: S.Assets.couldNotBeBroadcasted, error.localizedDescription))
                     }
             })
         }
+
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {

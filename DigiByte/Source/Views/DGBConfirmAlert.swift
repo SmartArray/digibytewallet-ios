@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 fileprivate class ConfirmButton: DGBHapticButton {
     override var isHighlighted: Bool {
@@ -18,11 +19,12 @@ fileprivate class ConfirmButton: DGBHapticButton {
 
 class DAModalAssetSelector: DGBModalWindow {
     var callback: ((AssetModel?) -> Void)? = nil
+    let tableView: UITableView = UITableView()
     
     init() {
-        super.init(title: "Select an asset", padding: 0)
+        super.init(title: S.Assets.selectAnAsset, padding: 0)
         
-        let tv = UITableView()
+        let tv = tableView
         stackView.addArrangedSubview(tv)
         
         let hC = tv.heightAnchor.constraint(equalToConstant: 300)
@@ -65,15 +67,17 @@ class DAModalAssetSelectorCell: UITableViewCell {
         let targetX: CGFloat = 77
         var shift: CGFloat!
         
+        let totalWidth = self.bounds.width
+        
         tempFrame = textLabel!.frame
         shift = tempFrame.origin.x - targetX
         tempFrame.origin.x = targetX
-        textLabel!.frame = CGRect(x: tempFrame.origin.x, y: tempFrame.origin.y, width: tempFrame.width + shift, height: tempFrame.height)
+        textLabel!.frame = CGRect(x: tempFrame.origin.x, y: tempFrame.origin.y, width: totalWidth - targetX - 20, height: tempFrame.height)
         
         tempFrame = detailTextLabel!.frame
         shift = tempFrame.origin.x - targetX
         tempFrame.origin.x = targetX
-        detailTextLabel!.frame = CGRect(x: tempFrame.origin.x, y: tempFrame.origin.y, width: tempFrame.width + shift, height: tempFrame.height)
+        detailTextLabel!.frame = CGRect(x: tempFrame.origin.x, y: tempFrame.origin.y, width: totalWidth - shift, height: tempFrame.height)
     }
     
     required init?(coder: NSCoder) {
@@ -99,13 +103,18 @@ extension DAModalAssetSelector: UITableViewDelegate, UITableViewDataSource {
         cell.textLabel?.text = assetModel.getAssetName()
         
         let amount = AssetHelper.allBalances[assetId] ?? 0
-//        let amountStr: String? = amount == nil ? nil : "\(amount!)"
-//        let subtitleStr = [amountStr].compactMap({ $0 }).joined(separator: " | ")
-        let subtitleStr = "Balance: \(amount)"
+        let subtitleStr = String(format: S.Send.balance, "\(amount)")
         cell.detailTextLabel?.text = subtitleStr
         
         if let urlStr = assetModel.getImage()?.url, let url = URL(string: urlStr) {
-            cell.imageView?.kf.setImage(with: url)
+            cell.imageView?.kf.setImage(with: url, placeholder: nil, options: [
+                .processor(DownsamplingImageProcessor(size: CGSize(width: 32, height: 32) )),
+                .scaleFactor(UIScreen.main.scale),
+                .transition(ImageTransition.fade(0.2)),
+                .cacheOriginalImage
+            ], progressBlock: nil, completionHandler: { (result) in
+                cell.setNeedsLayout()
+            })
             cell.imageView?.tintColor = .clear
         } else {
             cell.imageView?.image = UIImage(named: "digiassets_small")?.withRenderingMode(.alwaysTemplate)
@@ -225,16 +234,16 @@ class DGBModalMediaOptions: DGBModalWindow {
         self.callback = callback
         
         if let previewText = UIPasteboard.general.string {
-            pasteBtn = DGBModalMediaOptionButton("Paste from clipboard", accessory: previewText, image: UIImage(named: "paste-colored"))
+            pasteBtn = DGBModalMediaOptionButton(S.Assets.Send.pasteFromClipboard, accessory: previewText, image: UIImage(named: "paste-colored"))
         } else {
-            pasteBtn = DGBModalMediaOptionButton("Paste from clipboard", accessory: "No data", image: UIImage(named: "paste-colored"), isEnabled: false)
+            pasteBtn = DGBModalMediaOptionButton(S.Assets.Send.pasteFromClipboard, accessory: S.Send.emptyPasteboard, image: UIImage(named: "paste-colored"), isEnabled: false)
         }
         
-        addressBookBtn = DGBModalMediaOptionButton("Address Book", accessory: "Use an address of your Address Book", image: UIImage(named: "address-book-colored"))
-        scanBtn = DGBModalMediaOptionButton("Scan QR code", accessory: "Use your camera to scan a QR code containing an address", image: UIImage(named: "scan-colored"))
-        galleryBtn = DGBModalMediaOptionButton("Browse gallery", accessory: "Import image from gallery", image: UIImage(named: "gallery-colored"))
+        addressBookBtn = DGBModalMediaOptionButton(S.Assets.Send.addressBook, accessory: S.Assets.Send.addressBookDescription, image: UIImage(named: "address-book-colored"))
+        scanBtn = DGBModalMediaOptionButton(S.Assets.Send.scanQR, accessory: S.Assets.Send.scanQRDescription, image: UIImage(named: "scan-colored"))
+        galleryBtn = DGBModalMediaOptionButton(S.Assets.Send.browseGallery, accessory: S.Assets.Send.browseGalleryDescription, image: UIImage(named: "gallery-colored"))
         
-        super.init(title: "Import address", padding: 0)
+        super.init(title: S.Assets.Send.importAddress, padding: 0)
     
         stackView.addArrangedSubview(addressBookBtn)
         stackView.addArrangedSubview(pasteBtn)
@@ -525,6 +534,7 @@ typealias DGBCallback = (() -> Void)
 
 class DGBModalLoadingView: DGBModalWindow {
     let ai: UIActivityIndicatorView
+    let label = UILabel()
     var gr: UITapGestureRecognizer!
     var tapCount = 0
     
@@ -534,10 +544,21 @@ class DGBModalLoadingView: DGBModalWindow {
         
         ai.heightAnchor.constraint(equalToConstant: 40).isActive = true
         stackView.addArrangedSubview(ai)
+        stackView.addArrangedSubview(label)
         
         gr = UITapGestureRecognizer(target: self, action: #selector(tapped))
         view.isUserInteractionEnabled = true
         view.addGestureRecognizer(gr)
+        
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = UIFont.da.customBody(size: 14)
+        label.lineBreakMode = .byWordWrapping
+        label.textColor = UIColor.gray
+    }
+    
+    func updateStep(current: Int, total: Int) {
+        label.text = "\(current) / \(total)"
     }
     
     @objc
@@ -572,7 +593,9 @@ class DGBConfirmAlert: DGBModalWindow {
     var cancelCallback: ((DGBCallback) -> Void)? = nil
     var alternativeCallback: ((DGBCallback) -> Void)? = nil
     
-    private let contentLabel = UILabel()
+    let contentLabel = UILabel()
+    var imageView: UIImageView!
+    let alternativeTitle: String?
     
     private let buttonsView = UIStackView()
     
@@ -626,6 +649,8 @@ class DGBConfirmAlert: DGBModalWindow {
             alternativeButton.setTitleColor(UIColor.gray, for: .normal)
             alternativeButton.titleLabel?.textAlignment = .center
             alternativeButton.titleLabel?.font = UIFont.da.customMedium(size: 12)
+            alternativeButton.titleLabel?.numberOfLines = 0
+            alternativeButton.titleLabel?.lineBreakMode = .byWordWrapping
             alternativeButton.tap = { [weak self] in
                 guard let c = self?.closeCallback else { return }
                 self?.alternativeCallback?(c)
@@ -635,13 +660,15 @@ class DGBConfirmAlert: DGBModalWindow {
     }
     
     private func addConstraints() {
-        imageView.constrain([
-            imageView.topAnchor.constraint(equalTo: imageContainer.topAnchor, constant: 0),
-            imageView.bottomAnchor.constraint(equalTo: imageContainer.bottomAnchor, constant: 0),
-            imageView.heightAnchor.constraint(lessThanOrEqualToConstant: 180),
-            imageView.centerXAnchor.constraint(equalTo: imageContainer.centerXAnchor),
-        ])
-        
+        if image != nil {
+            imageView.constrain([
+                imageView.topAnchor.constraint(equalTo: imageContainer.topAnchor, constant: 0),
+                imageView.bottomAnchor.constraint(equalTo: imageContainer.bottomAnchor, constant: 0),
+                imageView.heightAnchor.constraint(lessThanOrEqualToConstant: 180),
+                imageView.centerXAnchor.constraint(equalTo: imageContainer.centerXAnchor),
+            ])
+        }
+            
         if cancelTitle != nil {
             okButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor, multiplier: 1.0).isActive = true
             okButton.heightAnchor.constraint(equalTo: cancelButton.heightAnchor, multiplier: 1.0).isActive = true
@@ -682,10 +709,16 @@ class DGBConfirmAlert: DGBModalWindow {
         okButton.backgroundColor = UIColor.da.darkSkyBlue
         okButton.layer.cornerRadius = 8
         okButton.layer.masksToBounds = true
+        okButton.titleLabel?.numberOfLines = 0
+        okButton.titleLabel?.textAlignment = .center
+        okButton.titleLabel?.lineBreakMode = .byWordWrapping
         
         cancelButton.backgroundColor = UIColor(red: 228/255, green: 229/255, blue: 228/255, alpha: 1.0) // grey
         cancelButton.layer.cornerRadius = 8
         cancelButton.layer.masksToBounds = true
+        cancelButton.titleLabel?.textAlignment = .center
+        cancelButton.titleLabel?.numberOfLines = 0
+        cancelButton.titleLabel?.lineBreakMode = .byWordWrapping
     }
     
     private func addEvents() {
